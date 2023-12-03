@@ -1,0 +1,1806 @@
+[
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 1,
+            "col": 2
+        }
+    },
+    {
+        "Asterisk": {
+            "lexeme": "*",
+            "literal": "*",
+            "line": 2,
+            "col": 1
+        }
+    },
+    {
+        "Repeat": {
+            "lexeme": "repeat",
+            "literal": "repeat",
+            "line": 2,
+            "col": 3
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "8/8/2021",
+            "literal": {
+                "year": 2021,
+                "month": 8,
+                "day": 8
+            },
+            "line": 2,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 2,
+            "col": 18
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 3,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 3,
+            "col": 8
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 4,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 4,
+            "col": 11
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-b",
+            "literal": "schedule-b",
+            "line": 5,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 5,
+            "col": 11
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-c",
+            "literal": "schedule-c",
+            "line": 6,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 6,
+            "col": 11
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-b",
+            "literal": "schedule-b",
+            "line": 7,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 7,
+            "col": 11
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-c",
+            "literal": "schedule-c",
+            "line": 8,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 8,
+            "col": 11
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 9,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 9,
+            "col": 8
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 10,
+            "col": 1
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 11,
+            "col": 1
+        }
+    },
+    {
+        "Asterisk": {
+            "lexeme": "*",
+            "literal": "*",
+            "line": 12,
+            "col": 1
+        }
+    },
+    {
+        "Calendar": {
+            "lexeme": "calendar",
+            "literal": "calendar",
+            "line": 12,
+            "col": 3
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 12,
+            "col": 31
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "6/8/2023-8/8/2023",
+            "literal": [
+                {
+                    "year": 2023,
+                    "month": 6,
+                    "day": 8
+                },
+                {
+                    "year": 2023,
+                    "month": 8,
+                    "day": 8
+                }
+            ],
+            "line": 13,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 13,
+            "col": 19
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Summer Vacation\"",
+            "literal": "Summer Vacation",
+            "line": 13,
+            "col": 27
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 13,
+            "col": 44
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "8/9/2023",
+            "literal": {
+                "year": 2023,
+                "month": 8,
+                "day": 9
+            },
+            "line": 14,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 14,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 14,
+            "col": 20
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "8/10/2023",
+            "literal": {
+                "year": 2023,
+                "month": 8,
+                "day": 10
+            },
+            "line": 15,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 15,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 15,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "8/11/2023",
+            "literal": {
+                "year": 2023,
+                "month": 8,
+                "day": 11
+            },
+            "line": 16,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 16,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 16,
+            "col": 21
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "9/2/2023-9/4/2023",
+            "literal": [
+                {
+                    "year": 2023,
+                    "month": 9,
+                    "day": 2
+                },
+                {
+                    "year": 2023,
+                    "month": 9,
+                    "day": 4
+                }
+            ],
+            "line": 17,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 17,
+            "col": 19
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Labor Day Weekend\"",
+            "literal": "Labor Day Weekend",
+            "line": 17,
+            "col": 27
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 17,
+            "col": 46
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "9/26/2023",
+            "literal": {
+                "year": 2023,
+                "month": 9,
+                "day": 26
+            },
+            "line": 18,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-h",
+            "literal": "schedule-h",
+            "line": 18,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 18,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "9/27/2023",
+            "literal": {
+                "year": 2023,
+                "month": 9,
+                "day": 27
+            },
+            "line": 19,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-i",
+            "literal": "schedule-i",
+            "line": 19,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 19,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "10/2/2023",
+            "literal": {
+                "year": 2023,
+                "month": 10,
+                "day": 2
+            },
+            "line": 20,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-g3",
+            "literal": "schedule-g3",
+            "line": 20,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 20,
+            "col": 22
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "10/5/2023",
+            "literal": {
+                "year": 2023,
+                "month": 10,
+                "day": 5
+            },
+            "line": 21,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-d",
+            "literal": "schedule-d",
+            "line": 21,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 21,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "10/6/2023",
+            "literal": {
+                "year": 2023,
+                "month": 10,
+                "day": 6
+            },
+            "line": 22,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-e",
+            "literal": "schedule-e",
+            "line": 22,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 22,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "10/9/2023",
+            "literal": {
+                "year": 2023,
+                "month": 10,
+                "day": 9
+            },
+            "line": 23,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-b",
+            "literal": "schedule-b",
+            "line": 23,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 23,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "10/10/2023",
+            "literal": {
+                "year": 2023,
+                "month": 10,
+                "day": 10
+            },
+            "line": 24,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-c",
+            "literal": "schedule-c",
+            "line": 24,
+            "col": 12
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 24,
+            "col": 22
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "10/11/2023",
+            "literal": {
+                "year": 2023,
+                "month": 10,
+                "day": 11
+            },
+            "line": 25,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "sat-oct-2023",
+            "literal": "sat-oct-2023",
+            "line": 25,
+            "col": 12
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 25,
+            "col": 24
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "10/12/2023-10/15/2023",
+            "literal": [
+                {
+                    "year": 2023,
+                    "month": 10,
+                    "day": 12
+                },
+                {
+                    "year": 2023,
+                    "month": 10,
+                    "day": 15
+                }
+            ],
+            "line": 26,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 26,
+            "col": 23
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"End of Quarter Break\"",
+            "literal": "End of Quarter Break",
+            "line": 26,
+            "col": 31
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 26,
+            "col": 53
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "11/6/2023",
+            "literal": {
+                "year": 2023,
+                "month": 11,
+                "day": 6
+            },
+            "line": 27,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-b",
+            "literal": "schedule-b",
+            "line": 27,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 27,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "11/7/2023",
+            "literal": {
+                "year": 2023,
+                "month": 11,
+                "day": 7
+            },
+            "line": 28,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-c",
+            "literal": "schedule-c",
+            "line": 28,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 28,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "11/8/2023",
+            "literal": {
+                "year": 2023,
+                "month": 11,
+                "day": 8
+            },
+            "line": 29,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-b",
+            "literal": "schedule-b",
+            "line": 29,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 29,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "11/9/2023",
+            "literal": {
+                "year": 2023,
+                "month": 11,
+                "day": 9
+            },
+            "line": 30,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-c",
+            "literal": "schedule-c",
+            "line": 30,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 30,
+            "col": 21
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "11/10/2023-11/12/2023",
+            "literal": [
+                {
+                    "year": 2023,
+                    "month": 11,
+                    "day": 10
+                },
+                {
+                    "year": 2023,
+                    "month": 11,
+                    "day": 12
+                }
+            ],
+            "line": 31,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 31,
+            "col": 23
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Veteran's Day Weekend\"",
+            "literal": "Veteran's Day Weekend",
+            "line": 31,
+            "col": 31
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 31,
+            "col": 54
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "11/18/2023-11/26/2023",
+            "literal": [
+                {
+                    "year": 2023,
+                    "month": 11,
+                    "day": 18
+                },
+                {
+                    "year": 2023,
+                    "month": 11,
+                    "day": 26
+                }
+            ],
+            "line": 32,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 32,
+            "col": 23
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Thanksgiving Break\"",
+            "literal": "Thanksgiving Break",
+            "line": 32,
+            "col": 31
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 32,
+            "col": 51
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "12/19/2023",
+            "literal": {
+                "year": 2023,
+                "month": 12,
+                "day": 19
+            },
+            "line": 33,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "finals-day-1",
+            "literal": "finals-day-1",
+            "line": 33,
+            "col": 12
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 33,
+            "col": 24
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "12/20/2023",
+            "literal": {
+                "year": 2023,
+                "month": 12,
+                "day": 20
+            },
+            "line": 34,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "finals-day-2",
+            "literal": "finals-day-2",
+            "line": 34,
+            "col": 12
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 34,
+            "col": 24
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "12/21/2023",
+            "literal": {
+                "year": 2023,
+                "month": 12,
+                "day": 21
+            },
+            "line": 35,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "finals-day-3",
+            "literal": "finals-day-3",
+            "line": 35,
+            "col": 12
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 35,
+            "col": 24
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "12/22/2023-1/9/2024",
+            "literal": [
+                {
+                    "year": 2023,
+                    "month": 12,
+                    "day": 22
+                },
+                {
+                    "year": 2024,
+                    "month": 1,
+                    "day": 9
+                }
+            ],
+            "line": 36,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 36,
+            "col": 21
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Holiday Break\"",
+            "literal": "Holiday Break",
+            "line": 36,
+            "col": 29
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 36,
+            "col": 44
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "1/10/2024",
+            "literal": {
+                "year": 2024,
+                "month": 1,
+                "day": 10
+            },
+            "line": 37,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 37,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 37,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "1/11/2024",
+            "literal": {
+                "year": 2024,
+                "month": 1,
+                "day": 11
+            },
+            "line": 38,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 38,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 38,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "1/12/2024",
+            "literal": {
+                "year": 2024,
+                "month": 1,
+                "day": 12
+            },
+            "line": 39,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-a",
+            "literal": "schedule-a",
+            "line": 39,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 39,
+            "col": 21
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "1/13/2024-1/15/2024",
+            "literal": [
+                {
+                    "year": 2024,
+                    "month": 1,
+                    "day": 13
+                },
+                {
+                    "year": 2024,
+                    "month": 1,
+                    "day": 15
+                }
+            ],
+            "line": 40,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 40,
+            "col": 21
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"MLK Long Weekend\"",
+            "literal": "MLK Long Weekend",
+            "line": 40,
+            "col": 29
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 40,
+            "col": 47
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "1/22/2024",
+            "literal": {
+                "year": 2024,
+                "month": 1,
+                "day": 22
+            },
+            "line": 41,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-g4",
+            "literal": "schedule-g4",
+            "line": 41,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 41,
+            "col": 22
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "2/5/2024",
+            "literal": {
+                "year": 2024,
+                "month": 2,
+                "day": 5
+            },
+            "line": 42,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-g2",
+            "literal": "schedule-g2",
+            "line": 42,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 42,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "2/13/2024",
+            "literal": {
+                "year": 2024,
+                "month": 2,
+                "day": 13
+            },
+            "line": 43,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-d",
+            "literal": "schedule-d",
+            "line": 43,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 43,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "2/14/2024",
+            "literal": {
+                "year": 2024,
+                "month": 2,
+                "day": 14
+            },
+            "line": 44,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-e",
+            "literal": "schedule-e",
+            "line": 44,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 44,
+            "col": 21
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "2/17/2024-2/25/2024",
+            "literal": [
+                {
+                    "year": 2024,
+                    "month": 2,
+                    "day": 17
+                },
+                {
+                    "year": 2024,
+                    "month": 2,
+                    "day": 25
+                }
+            ],
+            "line": 45,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 45,
+            "col": 21
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Winter Break\"",
+            "literal": "Winter Break",
+            "line": 45,
+            "col": 29
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 45,
+            "col": 43
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/18/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 18
+            },
+            "line": 46,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-c",
+            "literal": "schedule-c",
+            "line": 46,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 46,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/19/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 19
+            },
+            "line": 47,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-h",
+            "literal": "schedule-h",
+            "line": 47,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 47,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/20/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 20
+            },
+            "line": 48,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-i",
+            "literal": "schedule-i",
+            "line": 48,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 48,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/22/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 22
+            },
+            "line": 49,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-g3",
+            "literal": "schedule-g3",
+            "line": 49,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 49,
+            "col": 22
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "3/23/2024-3/25/2024",
+            "literal": [
+                {
+                    "year": 2024,
+                    "month": 3,
+                    "day": 23
+                },
+                {
+                    "year": 2024,
+                    "month": 3,
+                    "day": 25
+                }
+            ],
+            "line": 50,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 50,
+            "col": 21
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"End of Quarter Break\"",
+            "literal": "End of Quarter Break",
+            "line": 50,
+            "col": 29
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 50,
+            "col": 51
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/26/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 26
+            },
+            "line": 51,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "sbac-2024-tues",
+            "literal": "sbac-2024-tues",
+            "line": 51,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 51,
+            "col": 25
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/27/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 27
+            },
+            "line": 52,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "sbac-2024-wed",
+            "literal": "sbac-2024-wed",
+            "line": 52,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 52,
+            "col": 24
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/28/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 28
+            },
+            "line": 53,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "sbac-2024-thurs",
+            "literal": "sbac-2024-thurs",
+            "line": 53,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 53,
+            "col": 26
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "3/29/2024",
+            "literal": {
+                "year": 2024,
+                "month": 3,
+                "day": 29
+            },
+            "line": 54,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "sbac-2024-fri",
+            "literal": "sbac-2024-fri",
+            "line": 54,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 54,
+            "col": 24
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "4/6/2024-4/14/2024",
+            "literal": [
+                {
+                    "year": 2024,
+                    "month": 4,
+                    "day": 6
+                },
+                {
+                    "year": 2024,
+                    "month": 4,
+                    "day": 14
+                }
+            ],
+            "line": 55,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 55,
+            "col": 20
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Spring Break\"",
+            "literal": "Spring Break",
+            "line": 55,
+            "col": 28
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 55,
+            "col": 42
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "4/30/2024",
+            "literal": {
+                "year": 2024,
+                "month": 4,
+                "day": 30
+            },
+            "line": 56,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-d",
+            "literal": "schedule-d",
+            "line": 56,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 56,
+            "col": 21
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "5/1/2024",
+            "literal": {
+                "year": 2024,
+                "month": 5,
+                "day": 1
+            },
+            "line": 57,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-e",
+            "literal": "schedule-e",
+            "line": 57,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 57,
+            "col": 20
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "5/20/2024",
+            "literal": {
+                "year": 2024,
+                "month": 5,
+                "day": 20
+            },
+            "line": 58,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "schedule-g4",
+            "literal": "schedule-g4",
+            "line": 58,
+            "col": 11
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 58,
+            "col": 22
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "5/25/2024-5/27/2024",
+            "literal": [
+                {
+                    "year": 2024,
+                    "month": 5,
+                    "day": 25
+                },
+                {
+                    "year": 2024,
+                    "month": 5,
+                    "day": 27
+                }
+            ],
+            "line": 59,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 59,
+            "col": 21
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Memorial Day Weekend\"",
+            "literal": "Memorial Day Weekend",
+            "line": 59,
+            "col": 29
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 59,
+            "col": 51
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "6/4/2024",
+            "literal": {
+                "year": 2024,
+                "month": 6,
+                "day": 4
+            },
+            "line": 60,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "finals-day-1",
+            "literal": "finals-day-1",
+            "line": 60,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 60,
+            "col": 22
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "6/5/2024",
+            "literal": {
+                "year": 2024,
+                "month": 6,
+                "day": 5
+            },
+            "line": 61,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "finals-day-2",
+            "literal": "finals-day-2",
+            "line": 61,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 61,
+            "col": 22
+        }
+    },
+    {
+        "Date": {
+            "lexeme": "6/6/2024",
+            "literal": {
+                "year": 2024,
+                "month": 6,
+                "day": 6
+            },
+            "line": 62,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "finals-day-3",
+            "literal": "finals-day-3",
+            "line": 62,
+            "col": 10
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 62,
+            "col": 22
+        }
+    },
+    {
+        "DateRange": {
+            "lexeme": "6/7/2024-8/6/2024",
+            "literal": [
+                {
+                    "year": 2024,
+                    "month": 6,
+                    "day": 7
+                },
+                {
+                    "year": 2024,
+                    "month": 8,
+                    "day": 6
+                }
+            ],
+            "line": 63,
+            "col": 1
+        }
+    },
+    {
+        "Identifier": {
+            "lexeme": "weekend",
+            "literal": "weekend",
+            "line": 63,
+            "col": 19
+        }
+    },
+    {
+        "String": {
+            "lexeme": "\"Summer Vacation\"",
+            "literal": "Summer Vacation",
+            "line": 63,
+            "col": 27
+        }
+    },
+    {
+        "NewLine": {
+            "lexeme": "\n",
+            "literal": "\n",
+            "line": 63,
+            "col": 44
+        }
+    }
+]

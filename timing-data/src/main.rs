@@ -56,6 +56,7 @@ enum Token {
 
     // Literals.
     Identifier(TokenInfo<String>),
+    PeriodName(TokenInfo<String>),
     String(TokenInfo<String>),
     Date(TokenInfo<Date>),
     DateRange(TokenInfo<(Date, Date)>),
@@ -151,10 +152,10 @@ impl Scanner {
 
 fn make_string_token(lexeme: String, line: u32, col: u32) -> Result<Token> {
     let literal = lexeme[1..lexeme.len() - 1].to_string();
-    let re: Regex = Regex::new(r#"^[a-zA-Z0-9 \-']+$"#).unwrap();
+    let re: Regex = Regex::new(r#"^[a-zA-Z0-9 \-'()]+$"#).unwrap();
 
     if !re.is_match(&literal) {
-        return Err(anyhow!("Invalid string on line {} near {}", line, lexeme));
+        return Err(anyhow!("Line {}: Invalid string on  near {}", line, lexeme));
     }
 
     Ok(Token::String(TokenInfo {
@@ -198,7 +199,7 @@ fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) -> Result<()> {
         scanner.read_char()?;
         if period_char == '\n' {
             if lexeme.len() > 0 {
-                tokens.push(Token::Identifier(TokenInfo {
+                tokens.push(Token::PeriodName(TokenInfo {
                     lexeme: lexeme.clone(),
                     literal: lexeme.clone(),
                     line: scanner.get_line(),
@@ -207,6 +208,8 @@ fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) -> Result<()> {
                 lexeme.clear();
             }
             tokens.push(make_newline_token(scanner.get_line(), scanner.get_col()));
+        } else {
+            lexeme.push(period_char);
         }
     }
 
@@ -321,23 +324,70 @@ fn tokenizer(filename: String) -> Result<Vec<Token>> {
                 }
             }
             '0'..='9' => {
-                // date (or range)
+                // date (or range) or time
                 let mut lexeme = String::new();
                 lexeme.push(c);
                 let col = scanner.get_col();
                 let mut is_range = false;
+                let mut is_time = false;
 
                 while let Ok(date_char) = scanner.peek_char() {
                     if date_char == ' ' || date_char == '\n' {
                         break;
                     } else {
                         is_range = is_range || date_char == '-';
+                        is_time = is_time || date_char == ':';
                         lexeme.push(date_char);
                         scanner.read_char()?;
                     }
                 }
 
-                if is_range {
+                if is_range && is_time {
+                    return Err(anyhow!(
+                        "Line {}: unexpected token {}",
+                        scanner.get_line(),
+                        lexeme
+                    ));
+                }
+
+                if is_time {
+                    tokens.push(make_time_token(lexeme, scanner.get_line(), col)?);
+
+                    // assert space after time
+                    if let Ok(space_char) = scanner.read_char() {
+                        if space_char != ' ' {
+                            return Err(anyhow!(
+                                "Line {}: unexpected token {}",
+                                scanner.get_line(),
+                                space_char
+                            ));
+                        }
+                    } else {
+                        return Err(anyhow!(
+                            "Line {}: unexpected end of file",
+                            scanner.get_line()
+                        ));
+                    }
+
+                    // parse PeriodName after time
+                    let col = scanner.get_col();
+                    let mut pn_lexeme = String::new();
+                    while let Ok(pn_char) = scanner.peek_char() {
+                        if pn_char == '\n' {
+                            break;
+                        } else {
+                            pn_lexeme.push(pn_char);
+                            scanner.read_char()?;
+                        }
+                    }
+
+                    tokens.push(Token::PeriodName(TokenInfo {
+                        lexeme: pn_lexeme.clone(),
+                        literal: pn_lexeme.clone(),
+                        line: scanner.get_line(),
+                        col: col + 1,
+                    }));
+                } else if is_range {
                     let mut parts = lexeme.split('-');
                     let start = parts.next().unwrap().parse::<Date>()?;
                     let end = parts.next().unwrap().parse::<Date>()?;
@@ -451,7 +501,7 @@ fn tokenizer(filename: String) -> Result<Vec<Token>> {
                         }));
 
                         // read until next directive (*)
-                        read_schedule(&mut scanner, &mut tokens)?;
+                        // read_schedule(&mut scanner, &mut tokens)?;
                     }
                     _ => {
                         tokens.push(Token::Identifier(TokenInfo {
@@ -479,8 +529,8 @@ fn tokenizer(filename: String) -> Result<Vec<Token>> {
 }
 
 fn main() {
-    let result = tokenizer("data/mvhs/school_new.txt".to_string()).unwrap();
-    // let result = tokenizer("testdata/school_new.txt".to_string()).unwrap();
+    // let result = tokenizer("data/mvhs/school_new.txt".to_string()).unwrap();
+    let result = tokenizer("data/mvhs/schedule_new.txt".to_string()).unwrap();
     println!("{:#?}", result);
     // println!("{}", result);
 }

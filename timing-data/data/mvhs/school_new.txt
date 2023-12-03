@@ -1,0 +1,72 @@
+
+* periods
+Period 1
+Period 2
+Period 3
+Period 4
+Period 5
+Period 6
+Period 7
+
+
+* non-periods
+Tutorial
+Period 2A
+Period 2B
+Period 3A
+Period 3B
+Period 4A
+Period 4B
+Junior ELA Testing
+Junior Math Testing
+Junior Math and Senior Science Testing
+PSAT/SAT Testing
+
+
+* schedule schedule-b "Schedule B"
+8:30 Period 1
+10:00 Brunch
+10:08 Free
+10:15 Period 3
+11:45 Lunch
+12:25 Free
+12:32 Period 5
+14:02 Free
+14:09 Period 7
+15:39 Free
+
+
+* schedule schedule-c "Schedule C"
+8:30 Period 2
+10:00 Free
+10:07 Tutorial
+11:00 Brunch
+11:08 Free
+11:15 Period 4
+12:45 Lunch
+13:25 Free
+13:32 Period 6
+15:02 Free
+
+* schedule weekend "Weekend"
+
+
+* schedule schedule-g2 "Schedule G (Rally 2nd)"
+8:30 Period 1
+9:13 Free
+9:20 Period 2A
+10:03 Free
+10:10 Period 2B
+10:53 Brunch
+11:01 Free
+11:08 Period 3
+11:51 Free
+11:58 Period 4
+12:41 Lunch
+13:16 Free
+13:23 Period 5
+14:06 Free
+14:13 Period 6
+14:56 Free
+15:03 Period 7
+15:46 Free

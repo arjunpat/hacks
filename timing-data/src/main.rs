@@ -1,16 +1,15 @@
-use anyhow::{anyhow, Error, Result};
-use core::fmt;
+use anyhow::{anyhow, Result};
+use core::{fmt, panic};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
-use std::io::{BufReader, Read};
-use std::str::FromStr;
+use std::io::{BufRead, BufReader, Read};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 struct TokenInfo<LiteralType> {
     lexeme: String,       // the actual text of the lexeme
     literal: LiteralType, // the value of the lexeme
-    byte_idx: usize,      // the byte index of the lexeme
+    byte_idx: u32,        // the byte index of the lexeme
 }
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 struct Date {
@@ -30,6 +29,7 @@ struct LexerError {
     from: u32,
     to: u32,
     msg: String,
+    hint: Option<String>,
 }
 
 impl std::error::Error for LexerError {
@@ -44,33 +44,12 @@ impl fmt::Display for LexerError {
     }
 }
 
-impl FromStr for Date {
-    type Err = Error;
-
-    fn from_str(s: &str) -> Result<Self> {
-        let mut parts = s.split('/');
-        let month = parts
-            .next()
-            .ok_or(anyhow!("Invalid date"))?
-            .parse::<u32>()?;
-        let day = parts
-            .next()
-            .ok_or(anyhow!("Invalid date"))?
-            .parse::<u32>()?;
-        let year = parts
-            .next()
-            .ok_or(anyhow!("Invalid date"))?
-            .parse::<u32>()?;
-
-        Ok(Date { year, month, day })
-    }
-}
-
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 enum Token {
     // Single-character tokens.
     Asterisk(TokenInfo<String>),
     NewLine(TokenInfo<String>),
+    Hyphen(TokenInfo<String>),
     // Eof(TokenInfo<String>),
 
     // Literals.
@@ -78,7 +57,7 @@ enum Token {
     PeriodName(TokenInfo<String>),
     String(TokenInfo<String>),
     Date(TokenInfo<Date>),
-    DateRange(TokenInfo<(Date, Date)>),
+    // DateRange(TokenInfo<(Date, Date)>),
     Time(TokenInfo<Time>),
 
     // Keywords.
@@ -150,8 +129,11 @@ impl Scanner {
         Ok(one_char[0] as char)
     }
 
-    pub fn get_pos(&self) -> usize {
-        self.pos
+    pub fn get_pos(&self) -> u32 {
+        if self.pos == 0 {
+            panic!("Scanner::get_pos() called before Scanner::read_char()");
+        }
+        (self.pos - 1) as u32
     }
 
     pub fn get_line_col(&self, pos: usize) -> (usize, usize) {
@@ -174,42 +156,25 @@ impl Scanner {
         (line, col)
     }
 
-    /// Returns the surrounding lines byte positions. Usedful for printing errors.
-    /// Return values:
-    /// return.0 = the byte pos of the start of the line before pos; if none exists, returns 0
-    /// return.1 = the byte pos of the start of the line after pos; if none exists,
-    /// returns the byte position of the end of the file
-    pub fn get_surrounding_lines(&self, pos: usize) -> (usize, usize) {
-        let (line, _) = self.get_line_col(pos);
-        let before;
-        let after;
-
-        if line == 1 {
-            before = 0;
-        } else {
-            before = self.newline_pos[line - 2];
+    pub fn get_start_of_line(&self, line: usize) -> usize {
+        match line {
+            1 => 0,
+            _ => self.newline_pos[line - 2] + 1,
         }
-
-        if line == self.newline_pos.len() + 1 {
-            after = self.newline_pos[line - 2];
-        } else {
-            after = self.newline_pos[line - 1];
-        }
-
-        (before, after)
     }
 }
 
-fn make_string_token(lexeme: String, byte_idx: usize) -> Result<Token> {
+fn make_string_token(lexeme: String, byte_idx: u32) -> Result<Token> {
     let literal = lexeme[1..lexeme.len() - 1].to_string();
     let re: Regex = Regex::new(r#"^[a-zA-Z0-9 \-'()]+$"#).unwrap();
 
     if !re.is_match(&literal) {
-        return Err(anyhow!(
-            "Line {}: Invalid string on  near {}",
-            byte_idx,
-            lexeme
-        ));
+        return Err(anyhow!(LexerError {
+            from: byte_idx as u32,
+            to: byte_idx + (lexeme.len() as u32),
+            msg: "string contains invalid chars".to_string(),
+            hint: Some("expected a-z, A-Z, 0-9, -, ', (, ), and space".to_string())
+        }));
     }
 
     Ok(Token::String(TokenInfo {
@@ -219,7 +184,7 @@ fn make_string_token(lexeme: String, byte_idx: usize) -> Result<Token> {
     }))
 }
 
-fn make_newline_token(byte_idx: usize) -> Token {
+fn make_newline_token(byte_idx: u32) -> Token {
     Token::NewLine(TokenInfo {
         lexeme: "\n".to_string(),
         literal: "\n".to_string(),
@@ -227,14 +192,79 @@ fn make_newline_token(byte_idx: usize) -> Token {
     })
 }
 
-fn make_time_token(lexeme: String, byte_idx: usize) -> Result<Token> {
-    let mut parts = lexeme.split(':');
-    let hour = parts.next().unwrap().parse::<u32>()?;
-    let minute = parts.next().unwrap().parse::<u32>()?;
+fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
+    let parts: Vec<_> = lexeme.split('/').collect();
+
+    let parse_err = LexerError {
+        from: byte_idx as u32,
+        to: byte_idx + (lexeme.len() - 1) as u32,
+        msg: "invalid date".to_string(),
+        hint: Some("expected format: MM/DD/YYYY".to_string()),
+    };
+
+    if parts.len() != 3 {
+        return Err(anyhow!(parse_err));
+    }
+
+    let parts: Vec<_> = parts.into_iter().map(|s| s.parse::<u32>()).collect();
+
+    if parts.iter().any(|r| r.is_err()) {
+        return Err(anyhow!(parse_err));
+    }
+
+    let mut parts = parts.into_iter().map(|r| r.unwrap());
+
+    let date = Date {
+        month: parts.next().unwrap(),
+        day: parts.next().unwrap(),
+        year: parts.next().unwrap(),
+    };
+
+    if date.month > 12 || date.day > 31 {
+        return Err(anyhow!(parse_err));
+    }
+
+    Ok(Token::Date(TokenInfo {
+        lexeme,
+        literal: date,
+        byte_idx,
+    }))
+}
+
+fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token> {
+    let parse_error = LexerError {
+        from: byte_idx as u32,
+        to: byte_idx + (lexeme.len() - 1) as u32,
+        msg: "invalid time".to_string(),
+        hint: Some("i thought this was a time but did not get HH:MM".to_string()),
+    };
+
+    let parts: Vec<_> = lexeme.split(':').collect();
+
+    if parts.len() != 2 {
+        return Err(anyhow!(parse_error));
+    }
+
+    let parts: Vec<_> = parts.into_iter().map(|s| s.parse::<u32>()).collect();
+
+    if parts.iter().any(|r| r.is_err()) {
+        return Err(anyhow!(parse_error));
+    }
+
+    let mut parts = parts.into_iter().map(|r| r.unwrap());
+
+    let literal = Time {
+        hour: parts.next().unwrap(),
+        minute: parts.next().unwrap(),
+    };
+
+    if literal.hour > 23 || literal.minute > 59 {
+        return Err(anyhow!(parse_error));
+    }
 
     Ok(Token::Time(TokenInfo {
         lexeme,
-        literal: Time { hour, minute },
+        literal,
         byte_idx,
     }))
 }
@@ -269,10 +299,6 @@ fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) -> Result<()> {
 fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
     let mut tokens = Vec::new();
 
-    // let file = File::open(filename)?;
-    // let mut buffer = BufReader::new(file);
-    // let mut line_number: usize = 0;
-
     while let Ok(c) = scanner.read_char() {
         match c {
             '*' => {
@@ -298,14 +324,10 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                     } else if string_char == '\n' {
                         return Err(anyhow!(LexerError {
                             from: byte_pos as u32,
-                            to: (scanner.get_pos() as u32) - 1,
-                            msg: "Unterminated string".to_string(),
+                            to: scanner.get_pos() as u32,
+                            msg: "unterminated string".to_string(),
+                            hint: Some("strings must be enclosed in double quotes".to_string())
                         }));
-                        // return Err(anyhow!(
-                        //     "Unterminated string on line {} near {}",
-                        //     scanner.get_line_col(col).0,
-                        //     lexeme
-                        // ));
                     }
                 }
                 tokens.push(make_string_token(lexeme, byte_pos)?);
@@ -319,31 +341,33 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                     scanner.read_char()?;
                 }
             }
+            '-' => {
+                // hyphen
+                tokens.push(Token::Hyphen(TokenInfo {
+                    lexeme: "-".to_string(),
+                    literal: "-".to_string(),
+                    byte_idx: scanner.get_pos(),
+                }));
+            }
             '0'..='9' => {
-                // date (or range) or time
+                // date or time
                 let mut lexeme = String::new();
                 lexeme.push(c);
                 let byte_idx = scanner.get_pos();
-                let mut is_range = false;
                 let mut is_time = false;
 
                 while let Ok(date_char) = scanner.peek_char() {
-                    if date_char == ' ' || date_char == '\n' {
+                    let date_uni = date_char as u8;
+                    let valid = (date_uni >= b'0' && date_uni <= b'9')
+                        || date_uni == b':'
+                        || date_uni == b'/';
+                    if !valid {
                         break;
                     } else {
-                        is_range = is_range || date_char == '-';
                         is_time = is_time || date_char == ':';
                         lexeme.push(date_char);
                         scanner.read_char()?;
                     }
-                }
-
-                if is_range && is_time {
-                    return Err(anyhow!(
-                        "Line {}: unexpected token {}",
-                        scanner.get_pos(),
-                        lexeme
-                    ));
                 }
 
                 if is_time {
@@ -352,17 +376,23 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                     // assert space after time
                     if let Ok(space_char) = scanner.read_char() {
                         if space_char != ' ' {
-                            return Err(anyhow!(
-                                "Line {}: unexpected token {}",
-                                scanner.get_pos(),
-                                space_char
-                            ));
+                            return Err(anyhow!(LexerError {
+                                from: scanner.get_pos() as u32,
+                                to: scanner.get_pos() as u32,
+                                msg: "expected space after time".to_string(),
+                                hint: Some(
+                                    "schedule items are of form {time} {period name}\\n"
+                                        .to_string()
+                                )
+                            }));
                         }
                     } else {
-                        return Err(anyhow!(
-                            "Line {}: unexpected end of file",
-                            scanner.get_pos()
-                        ));
+                        return Err(anyhow!(LexerError {
+                            from: scanner.get_pos() as u32,
+                            to: scanner.get_pos() as u32,
+                            msg: "expected space after time".to_string(),
+                            hint: None
+                        }));
                     }
 
                     // parse PeriodName after time
@@ -382,24 +412,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         literal: pn_lexeme.clone(),
                         byte_idx: byte_idx + 1,
                     }));
-                } else if is_range {
-                    let mut parts = lexeme.split('-');
-                    let start = parts.next().unwrap().parse::<Date>()?;
-                    let end = parts.next().unwrap().parse::<Date>()?;
-
-                    tokens.push(Token::DateRange(TokenInfo {
-                        lexeme,
-                        literal: (start, end),
-                        byte_idx,
-                    }));
                 } else {
-                    let date = lexeme.parse::<Date>()?;
-
-                    tokens.push(Token::Date(TokenInfo {
-                        lexeme,
-                        literal: date,
-                        byte_idx,
-                    }));
+                    tokens.push(make_date_token(lexeme, byte_idx)?);
                 }
             }
             'a'..='z' => {
@@ -436,10 +450,12 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         match &tokens[tokens.len() - 1] {
                             Token::Asterisk(_) => {}
                             _ => {
-                                return Err(anyhow!(
-                                    "Line {}: periods must be preceded by an asterisk",
-                                    scanner.get_pos()
-                                ));
+                                return Err(anyhow!(LexerError {
+                                    from: (scanner.get_pos() as u32) - lexeme.len() as u32 + 1,
+                                    to: scanner.get_pos() as u32,
+                                    msg: "periods must be preceded by an asterisk".to_string(),
+                                    hint: None
+                                }));
                             }
                         }
                         tokens.push(Token::Periods(TokenInfo {
@@ -455,10 +471,12 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         match &tokens[tokens.len() - 1] {
                             Token::Asterisk(_) => {}
                             _ => {
-                                return Err(anyhow!(
-                                    "Line {}: non-periods must be preceded by an asterisk",
-                                    scanner.get_pos()
-                                ));
+                                return Err(anyhow!(LexerError {
+                                    from: (scanner.get_pos() as u32) - lexeme.len() as u32 + 1,
+                                    to: scanner.get_pos() as u32,
+                                    msg: "non-periods must be preceded by an asterisk".to_string(),
+                                    hint: None
+                                }));
                             }
                         }
 
@@ -475,10 +493,12 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         match &tokens[tokens.len() - 1] {
                             Token::Asterisk(_) => {}
                             _ => {
-                                return Err(anyhow!(
-                                    "Line {}: schedule must be preceded by an asterisk",
-                                    scanner.get_pos()
-                                ));
+                                return Err(anyhow!(LexerError {
+                                    from: (scanner.get_pos() as u32) - lexeme.len() as u32 + 1,
+                                    to: scanner.get_pos() as u32,
+                                    msg: "schedule must be preceded by an asterisk".to_string(),
+                                    hint: None
+                                }));
                             }
                         }
 
@@ -487,11 +507,21 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                             literal: lexeme.clone(),
                             byte_idx,
                         }));
-
-                        // read until next directive (*)
-                        // read_schedule(&mut scanner, &mut tokens)?;
                     }
                     _ => {
+                        let regex = Regex::new(r#"^[a-z]+([a-z0-9]+[-])*[a-z0-9]+$"#).unwrap();
+                        if !regex.is_match(&lexeme) {
+                            return Err(anyhow!(LexerError {
+                                from: byte_idx as u32,
+                                to: byte_idx + (lexeme.len() - 1) as u32,
+                                msg: "invalid identifier".to_string(),
+                                hint: Some(
+                                    "expected a-z, 0-9, -, must start with a-z, and end with a-z or 0-9"
+                                        .to_string()
+                                )
+                            }));
+                        }
+
                         tokens.push(Token::Identifier(TokenInfo {
                             lexeme: lexeme.clone(),
                             literal: lexeme.clone(),
@@ -502,12 +532,14 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
             }
             ' ' => {}
             _ => {
-                return Err(anyhow!(
-                    "Line {}: unexpected character: {} ({})",
-                    scanner.get_pos(),
-                    c,
-                    c as u32
-                ));
+                return Err(anyhow!(LexerError {
+                    from: scanner.get_pos() as u32 - 1,
+                    to: scanner.get_pos() as u32,
+                    msg: format!("unexpected character: {} (unicode: {})", c, c as u32),
+                    hint: Some(
+                        "expected a-z, A-Z, 0-9, *, #, \", -, :, /, \\n, and space".to_string()
+                    )
+                }));
             }
         }
     }
@@ -520,39 +552,44 @@ impl LexerError {
         let buffer = File::open(filename)?;
         let mut buffer = BufReader::new(buffer);
 
+        let (line1, col1) = scanner.get_line_col(self.from as usize);
+        let (line2, _) = scanner.get_line_col(self.to as usize);
+        let line_start_pos = scanner.get_start_of_line(line1);
+
         let mut section = String::new();
+        buffer.seek_relative(line_start_pos as i64)?;
+        while section.len() < (self.to - self.from + 1) as usize {
+            if buffer.read_line(&mut section).is_err() {
+                break;
+            }
+        }
 
-        let (before, after) = scanner.get_surrounding_lines(self.from as usize);
-        buffer.seek_relative(before as i64)?;
-        buffer
-            .take((after - before) as u64)
-            .read_to_string(&mut section)?;
+        println!("\x1b[1m\x1b[31mError\x1b[0m: \x1b[1m{}\x1b[0m", self.msg);
+        println!("     in {}:{}:{}\n", filename, line1, col1);
 
-        let (line, col) = scanner.get_line_col(self.from as usize);
-        println!("Error on line {}: {}\n", line, self.msg);
-
-        let mut i = before;
+        let mut i = line_start_pos;
         for sec in section.split('\n') {
-            let line = scanner.get_line_col(i);
-            // pad line number to be 3 digits by adding a space at the beginning if needed
-            let line_str = format!("{}{}", if line.0 < 100 { " " } else { "" }, line.0);
+            if sec.len() != 0 {
+                let line = scanner.get_line_col(i);
+                let line_str = format!("{}{}", if line.0 < 100 { " " } else { "" }, line.0);
+                println!("        \x1b[1m\x1b[34m{}:\x1b[0m {}", line_str, sec);
+            }
 
-            println!("        {}: {}", line_str, sec);
             i += sec.len() + 1;
         }
 
-        println!(
-            "{}{}",
-            " ".repeat(col + 12),
-            "^".repeat((self.to - self.from) as usize)
-        );
+        if line1 == line2 {
+            println!(
+                "{}{}",
+                " ".repeat(col1 + 12),
+                "^".repeat((self.to - self.from + 1) as usize)
+            );
+        }
+        println!("");
+        if let Some(hint) = &self.hint {
+            println!("     \x1b[1mhint:\x1b[0m {}\n", hint);
+        }
 
-        // let (line, col) = scanner.get_line_col(self.from as usize);
-        // let (line1, col1) = scanner.get_line_col(self.to as usize);
-        // println!(
-        //     "Line {}, Col {} to Line {} Col {}: {}",
-        //     line, col, line1, col1, self.msg
-        // );
         Ok(())
     }
 }

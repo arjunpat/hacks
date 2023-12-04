@@ -195,21 +195,21 @@ fn make_newline_token(byte_idx: u32) -> Token {
 fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
     let parts: Vec<_> = lexeme.split('/').collect();
 
-    let parse_err = LexerError {
+    let parse_err = anyhow!(LexerError {
         from: byte_idx,
         to: byte_idx + lexeme.len() as u32 - 1,
         msg: "invalid date".to_string(),
         hint: Some("expected format: MM/DD/YYYY".to_string()),
-    };
+    });
 
     if parts.len() != 3 {
-        return Err(anyhow!(parse_err));
+        return Err(parse_err);
     }
 
     let parts: Vec<_> = parts.into_iter().map(|s| s.parse::<u32>()).collect();
 
     if parts.iter().any(|r| r.is_err()) {
-        return Err(anyhow!(parse_err));
+        return Err(parse_err);
     }
 
     let mut parts = parts.into_iter().map(|r| r.unwrap());
@@ -221,7 +221,7 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
     };
 
     if date.month > 12 || date.day > 31 {
-        return Err(anyhow!(parse_err));
+        return Err(parse_err);
     }
 
     Ok(Token::Date(TokenInfo {
@@ -232,23 +232,23 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
 }
 
 fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token> {
-    let parse_error = LexerError {
+    let parse_error = anyhow!(LexerError {
         from: byte_idx,
         to: byte_idx + lexeme.len() as u32 - 1,
         msg: "invalid time".to_string(),
         hint: Some("i thought this was a time but did not get HH:MM".to_string()),
-    };
+    });
 
     let parts: Vec<_> = lexeme.split(':').collect();
 
     if parts.len() != 2 {
-        return Err(anyhow!(parse_error));
+        return Err(parse_error);
     }
 
     let parts: Vec<_> = parts.into_iter().map(|s| s.parse::<u32>()).collect();
 
     if parts.iter().any(|r| r.is_err()) {
-        return Err(anyhow!(parse_error));
+        return Err(parse_error);
     }
 
     let mut parts = parts.into_iter().map(|r| r.unwrap());
@@ -259,7 +259,7 @@ fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token> {
     };
 
     if literal.hour > 23 || literal.minute > 59 {
-        return Err(anyhow!(parse_error));
+        return Err(parse_error);
     }
 
     Ok(Token::Time(TokenInfo {

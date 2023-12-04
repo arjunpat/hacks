@@ -138,7 +138,7 @@ impl Scanner {
 
     pub fn get_line_col(&self, pos: usize) -> (usize, usize) {
         let mut line = 1;
-        let mut col = 1;
+        let col;
 
         for newline_pos in &self.newline_pos {
             if pos <= *newline_pos {
@@ -170,8 +170,8 @@ fn make_string_token(lexeme: String, byte_idx: u32) -> Result<Token> {
 
     if !re.is_match(&literal) {
         return Err(anyhow!(LexerError {
-            from: byte_idx as u32,
-            to: byte_idx + (lexeme.len() as u32),
+            from: byte_idx,
+            to: byte_idx + lexeme.len() as u32 - 1,
             msg: "string contains invalid chars".to_string(),
             hint: Some("expected a-z, A-Z, 0-9, -, ', (, ), and space".to_string())
         }));
@@ -196,8 +196,8 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
     let parts: Vec<_> = lexeme.split('/').collect();
 
     let parse_err = LexerError {
-        from: byte_idx as u32,
-        to: byte_idx + (lexeme.len() - 1) as u32,
+        from: byte_idx,
+        to: byte_idx + lexeme.len() as u32 - 1,
         msg: "invalid date".to_string(),
         hint: Some("expected format: MM/DD/YYYY".to_string()),
     };
@@ -233,8 +233,8 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
 
 fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token> {
     let parse_error = LexerError {
-        from: byte_idx as u32,
-        to: byte_idx + (lexeme.len() - 1) as u32,
+        from: byte_idx,
+        to: byte_idx + lexeme.len() as u32 - 1,
         msg: "invalid time".to_string(),
         hint: Some("i thought this was a time but did not get HH:MM".to_string()),
     };
@@ -323,8 +323,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         break;
                     } else if string_char == '\n' {
                         return Err(anyhow!(LexerError {
-                            from: byte_pos as u32,
-                            to: scanner.get_pos() as u32,
+                            from: byte_pos,
+                            to: scanner.get_pos() - 1,
                             msg: "unterminated string".to_string(),
                             hint: Some("strings must be enclosed in double quotes".to_string())
                         }));
@@ -377,8 +377,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                     if let Ok(space_char) = scanner.read_char() {
                         if space_char != ' ' {
                             return Err(anyhow!(LexerError {
-                                from: scanner.get_pos() as u32,
-                                to: scanner.get_pos() as u32,
+                                from: scanner.get_pos(),
+                                to: scanner.get_pos(),
                                 msg: "expected space after time".to_string(),
                                 hint: Some(
                                     "schedule items are of form {time} {period name}\\n"
@@ -388,8 +388,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         }
                     } else {
                         return Err(anyhow!(LexerError {
-                            from: scanner.get_pos() as u32,
-                            to: scanner.get_pos() as u32,
+                            from: scanner.get_pos(),
+                            to: scanner.get_pos(),
                             msg: "expected space after time".to_string(),
                             hint: None
                         }));
@@ -451,8 +451,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                             Token::Asterisk(_) => {}
                             _ => {
                                 return Err(anyhow!(LexerError {
-                                    from: (scanner.get_pos() as u32) - lexeme.len() as u32 + 1,
-                                    to: scanner.get_pos() as u32,
+                                    from: scanner.get_pos() - lexeme.len() as u32 + 1,
+                                    to: scanner.get_pos(),
                                     msg: "periods must be preceded by an asterisk".to_string(),
                                     hint: None
                                 }));
@@ -472,8 +472,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                             Token::Asterisk(_) => {}
                             _ => {
                                 return Err(anyhow!(LexerError {
-                                    from: (scanner.get_pos() as u32) - lexeme.len() as u32 + 1,
-                                    to: scanner.get_pos() as u32,
+                                    from: scanner.get_pos() - lexeme.len() as u32 + 1,
+                                    to: scanner.get_pos(),
                                     msg: "non-periods must be preceded by an asterisk".to_string(),
                                     hint: None
                                 }));
@@ -494,8 +494,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                             Token::Asterisk(_) => {}
                             _ => {
                                 return Err(anyhow!(LexerError {
-                                    from: (scanner.get_pos() as u32) - lexeme.len() as u32 + 1,
-                                    to: scanner.get_pos() as u32,
+                                    from: scanner.get_pos() - lexeme.len() as u32 + 1,
+                                    to: scanner.get_pos(),
                                     msg: "schedule must be preceded by an asterisk".to_string(),
                                     hint: None
                                 }));
@@ -512,8 +512,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         let regex = Regex::new(r#"^[a-z]+([a-z0-9]+[-])*[a-z0-9]+$"#).unwrap();
                         if !regex.is_match(&lexeme) {
                             return Err(anyhow!(LexerError {
-                                from: byte_idx as u32,
-                                to: byte_idx + (lexeme.len() - 1) as u32,
+                                from: byte_idx,
+                                to: byte_idx + lexeme.len() as u32 - 1,
                                 msg: "invalid identifier".to_string(),
                                 hint: Some(
                                     "expected a-z, 0-9, -, must start with a-z, and end with a-z or 0-9"
@@ -533,8 +533,8 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
             ' ' => {}
             _ => {
                 return Err(anyhow!(LexerError {
-                    from: scanner.get_pos() as u32 - 1,
-                    to: scanner.get_pos() as u32,
+                    from: scanner.get_pos(),
+                    to: scanner.get_pos(),
                     msg: format!("unexpected character: {} (unicode: {})", c, c as u32),
                     hint: Some(
                         "expected a-z, A-Z, 0-9, *, #, \", -, :, /, \\n, and space".to_string()

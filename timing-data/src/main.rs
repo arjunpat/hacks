@@ -26,9 +26,22 @@ fn load_school(school: &str) -> Result<()> {
 
     // let mut tokens = schedule_tokens.unwrap();
     // tokens.append(&mut school_tokens.unwrap());
+    // println!("Finished lexing");
 
-    let school_data = parser::gen(schedule_tokens.unwrap());
-    let school_data = parser::gen(school_tokens.unwrap());
+    let schedule_ast = parser::gen(schedule_tokens.unwrap(), &schedule_scanner);
+    let school_ast = parser::gen(school_tokens.unwrap(), &school_scanner);
+
+    if schedule_ast.is_err() || school_ast.is_err() {
+        if let Err(err) = schedule_ast {
+            println!("{}", err);
+        }
+
+        if let Err(err) = school_ast {
+            println!("{}", err);
+        }
+
+        return Err(anyhow!("Parser failed"));
+    }
 
     // if let Err(e) = school_data {
     //     println!("{}", e);

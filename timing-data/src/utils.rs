@@ -15,6 +15,9 @@ impl Scanner {
         let mut buffer = String::new();
         file.read_to_string(&mut buffer)?;
 
+        // in case it is not already there
+        buffer.push('\n');
+
         Ok(Scanner {
             newline_pos: Vec::new(),
             pos: 0,
@@ -82,6 +85,10 @@ impl Scanner {
         }
         None
     }
+
+    pub fn len(&self) -> u32 {
+        self.buffer.len() as u32
+    }
 }
 
 #[derive(Debug)]
@@ -106,25 +113,37 @@ impl fmt::Display for CompilerError {
 
 impl CompilerError {
     pub fn new(from: u32, to: u32, msg: &str, hint: &str) -> Self {
+        let hint = if hint.len() != 0 {
+            Some(hint.to_owned())
+        } else {
+            None
+        };
+
         CompilerError {
             from,
             to,
             msg: msg.to_owned(),
-            hint: Some(hint.to_owned()),
+            hint,
         }
     }
 
     pub fn fmt_for_terminal(&self, f: &mut dyn fmt::Write, scanner: &Scanner) -> Result<()> {
         // assumes that self.from and self.to are on the same line
+        // self.from and self.to can be u32::MAX if referring to the end of file
+        let from = self.from.min(scanner.len());
+        let to = self.to.min(scanner.len());
         let first_level_indent: String = " ".repeat(4);
         let excerpt_indent: String = " ".repeat(8);
 
-        let (line, col) = scanner.get_line_col(self.from as usize);
+        let (line, col) = scanner.get_line_col(from as usize);
 
         let mut section = String::new();
         {
             let mut idx = scanner.get_start_of_line(line) as usize;
             while let Some(c) = scanner.get_at(idx) {
+                if c == '\n' {
+                    break;
+                }
                 section.push(c);
                 idx += 1;
             }
@@ -157,10 +176,10 @@ impl CompilerError {
             "{}{}\x1b[1m\x1b[31m{}\x1b[0m\n",
             excerpt_indent,
             " ".repeat(col + 4),
-            "^".repeat((self.to - self.from + 1) as usize)
+            "^".repeat((to - from + 1) as usize)
         )?;
         if let Some(hint) = &self.hint {
-            writeln!(f, "{}\x1b[1mhint:\x1b[0m {}\n", first_level_indent, hint)?;
+            writeln!(f, "{}\x1b[1mhint:\x1b[0m {}", first_level_indent, hint)?;
         }
         Ok(())
     }

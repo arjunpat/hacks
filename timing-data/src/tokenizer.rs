@@ -5,10 +5,10 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct TokenInfo<LiteralType> {
-    lexeme: String,       // the actual text of the lexeme
-    literal: LiteralType, // the value of the lexeme
-    byte_idx: u32,        // the byte index of the lexeme
+pub struct Token {
+    pub lexeme: String,   // the actual text of the lexeme
+    pub literal: Literal, // the value of the lexeme
+    pub byte_idx: u32,    // the byte index of the lexeme
 }
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Date {
@@ -24,65 +24,65 @@ pub struct Time {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub enum Token {
+pub enum Literal {
     // Single-character tokens.
-    Asterisk(TokenInfo<String>),
-    NewLine(TokenInfo<String>),
-    Hyphen(TokenInfo<String>),
+    Asterisk,
+    NewLine,
+    Hyphen,
     // Eof(TokenInfo<String>),
 
     // Literals.
-    Identifier(TokenInfo<String>),
-    PeriodName(TokenInfo<String>),
-    String(TokenInfo<String>),
-    Date(TokenInfo<Date>),
-    Time(TokenInfo<Time>),
+    Identifier(String),
+    PeriodName(String),
+    String(String),
+    Date(Date),
+    Time(Time),
 
     // Keywords.
-    Repeat(TokenInfo<String>),
-    Calendar(TokenInfo<String>),
-    Periods(TokenInfo<String>),
-    NonPeriods(TokenInfo<String>),
-    Schedule(TokenInfo<String>),
+    Repeat,
+    Calendar,
+    Periods,
+    NonPeriods,
+    Schedule,
 }
 
-fn make_string_token(lexeme: String, byte_idx: u32) -> Result<Token> {
+fn make_string_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError> {
     let literal = lexeme[1..lexeme.len() - 1].to_string();
     let re: Regex = Regex::new(r#"^[a-zA-Z0-9 \-'().]+$"#).unwrap();
 
     if !re.is_match(&literal) {
-        return Err(anyhow!(CompilerError::new(
+        return Err(CompilerError::new(
             byte_idx,
             byte_idx + lexeme.len() as u32 - 1,
             "string contains invalid chars",
-            "expected a-z, A-Z, 0-9, -, ', (, ), and space"
-        )));
+            "expected a-z, A-Z, 0-9, -, ', (, ), and space",
+        ));
     }
 
-    Ok(Token::String(TokenInfo {
+    Ok(Token {
         lexeme,
-        literal,
-        byte_idx,
-    }))
-}
-
-fn make_newline_token(byte_idx: u32) -> Token {
-    Token::NewLine(TokenInfo {
-        lexeme: "\n".to_string(),
-        literal: "\n".to_string(),
+        literal: Literal::String(literal),
         byte_idx,
     })
 }
 
-fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
+fn make_newline_token(byte_idx: u32) -> Token {
+    Token {
+        lexeme: "\n".to_string(),
+        literal: Literal::NewLine,
+        byte_idx,
+    }
+}
+
+fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError> {
     let parts: Vec<_> = lexeme.split('/').collect();
 
-    let parse_err = anyhow!(CompilerError::new(
+    let parse_err = CompilerError::new(
         byte_idx,
         byte_idx + lexeme.len() as u32 - 1,
         "invalid date",
-        "expected format: MM/DD/YYYY"
-    ));
+        "expected format: MM/DD/YYYY",
+    );
 
     if parts.len() != 3 {
         return Err(parse_err);
@@ -106,20 +106,20 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token> {
         return Err(parse_err);
     }
 
-    Ok(Token::Date(TokenInfo {
+    Ok(Token {
         lexeme,
-        literal: date,
+        literal: Literal::Date(date),
         byte_idx,
-    }))
+    })
 }
 
-fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token> {
-    let parse_error = anyhow!(CompilerError::new(
+fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError> {
+    let parse_error = CompilerError::new(
         byte_idx,
         byte_idx + lexeme.len() as u32 - 1,
         "invalid time",
-        "i thought this was a time but did not get HH:MM"
-    ));
+        "i thought this was a time but did not get HH:MM",
+    );
 
     let parts: Vec<_> = lexeme.split(':').collect();
 
@@ -144,11 +144,11 @@ fn make_time_token(lexeme: String, byte_idx: u32) -> Result<Token> {
         return Err(parse_error);
     }
 
-    Ok(Token::Time(TokenInfo {
+    Ok(Token {
         lexeme,
-        literal,
+        literal: Literal::Time(literal),
         byte_idx,
-    }))
+    })
 }
 
 fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) {
@@ -162,11 +162,11 @@ fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) {
         scanner.read_char();
         if period_char == '\n' {
             if lexeme.len() > 0 {
-                tokens.push(Token::PeriodName(TokenInfo {
+                tokens.push(Token {
                     lexeme: lexeme.clone(),
-                    literal: lexeme.clone(),
+                    literal: Literal::PeriodName(lexeme.clone()),
                     byte_idx: scanner.get_pos() - lexeme.len() as u32,
-                }));
+                });
                 lexeme.clear();
             }
             tokens.push(make_newline_token(scanner.get_pos()));
@@ -176,17 +176,17 @@ fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) {
     }
 }
 
-fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
+fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>, CompilerError> {
     let mut tokens = Vec::new();
 
     while let Some(c) = scanner.read_char() {
         match c {
             '*' => {
-                tokens.push(Token::Asterisk(TokenInfo {
+                tokens.push(Token {
                     lexeme: "*".to_string(),
-                    literal: "*".to_string(),
+                    literal: Literal::Asterisk,
                     byte_idx: scanner.get_pos(),
-                }));
+                });
             }
             '\n' => {
                 tokens.push(make_newline_token(scanner.get_pos()));
@@ -202,12 +202,12 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                     if string_char == '"' {
                         break;
                     } else if string_char == '\n' {
-                        return Err(anyhow!(CompilerError::new(
+                        return Err(CompilerError::new(
                             byte_pos,
                             scanner.get_pos() - 1,
                             "unterminated string",
-                            "strings must be enclosed in double quotes"
-                        )));
+                            "strings must be enclosed in double quotes",
+                        ));
                     }
                 }
                 tokens.push(make_string_token(lexeme, byte_pos)?);
@@ -223,11 +223,11 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
             }
             '-' => {
                 // hyphen
-                tokens.push(Token::Hyphen(TokenInfo {
+                tokens.push(Token {
                     lexeme: "-".to_string(),
-                    literal: "-".to_string(),
+                    literal: Literal::Hyphen,
                     byte_idx: scanner.get_pos(),
-                }));
+                });
             }
             '0'..='9' => {
                 // date or time
@@ -256,20 +256,20 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                     // assert space after time
                     if let Some(space_char) = scanner.read_char() {
                         if space_char != ' ' {
-                            return Err(anyhow!(CompilerError::new(
+                            return Err(CompilerError::new(
                                 scanner.get_pos(),
                                 scanner.get_pos(),
                                 "expected space after time",
-                                "schedule items are of form {time} {period name}\\n"
-                            )));
+                                "schedule items are of form {time} {period name}\\n",
+                            ));
                         }
                     } else {
-                        return Err(anyhow!(CompilerError::new(
+                        return Err(CompilerError::new(
                             scanner.get_pos(),
                             scanner.get_pos(),
                             "expected space after time",
-                            "schedule items are of form {time} {period name}\\n"
-                        )));
+                            "schedule items are of form {time} {period name}\\n",
+                        ));
                     }
 
                     // parse PeriodName after time
@@ -284,11 +284,11 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
                         }
                     }
 
-                    tokens.push(Token::PeriodName(TokenInfo {
+                    tokens.push(Token {
                         lexeme: pn_lexeme.clone(),
-                        literal: pn_lexeme.clone(),
+                        literal: Literal::PeriodName(pn_lexeme.clone()),
                         byte_idx: byte_idx + 1,
-                    }));
+                    });
                 } else {
                     tokens.push(make_date_token(lexeme, byte_idx)?);
                 }
@@ -310,108 +310,105 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>> {
 
                 match lexeme.as_str() {
                     "repeat" => {
-                        tokens.push(Token::Repeat(TokenInfo {
+                        tokens.push(Token {
                             lexeme: lexeme.clone(),
-                            literal: lexeme.clone(),
+                            literal: Literal::Repeat,
                             byte_idx,
-                        }));
+                        });
                     }
                     "calendar" => {
-                        tokens.push(Token::Calendar(TokenInfo {
+                        tokens.push(Token {
                             lexeme: lexeme.clone(),
-                            literal: lexeme.clone(),
+                            literal: Literal::Calendar,
                             byte_idx,
-                        }));
+                        });
                     }
                     "periods" => {
-                        match &tokens[tokens.len() - 1] {
-                            Token::Asterisk(_) => {}
+                        match &tokens[tokens.len() - 1].literal {
+                            Literal::Asterisk => {}
                             _ => {
-                                return Err(anyhow!(CompilerError::new(
+                                return Err(CompilerError::new(
                                     scanner.get_pos() - lexeme.len() as u32 + 1,
                                     scanner.get_pos(),
                                     "periods must be preceded by an asterisk",
-                                    "directives are of form * {directive}"
-                                )));
+                                    "directives are of form * {directive}",
+                                ));
                             }
                         }
-                        tokens.push(Token::Periods(TokenInfo {
+                        tokens.push(Token {
                             lexeme: lexeme.clone(),
-                            literal: lexeme.clone(),
+                            literal: Literal::Periods,
                             byte_idx,
-                        }));
+                        });
 
                         // read until next directive (*)
                         read_periods(scanner, &mut tokens);
                     }
                     "non-periods" => {
-                        match &tokens[tokens.len() - 1] {
-                            Token::Asterisk(_) => {}
-                            _ => {
-                                return Err(anyhow!(CompilerError::new(
-                                    scanner.get_pos() - lexeme.len() as u32 + 1,
-                                    scanner.get_pos(),
-                                    "non-periods must be preceded by an asterisk",
-                                    "directives are of form * {directive}"
-                                )));
-                            }
+                        if !matches!(tokens[tokens.len() - 1].literal, Literal::Asterisk) {
+                            return Err(CompilerError::new(
+                                scanner.get_pos() - lexeme.len() as u32 + 1,
+                                scanner.get_pos(),
+                                "non-periods must be preceded by an asterisk",
+                                "directives are of form * {directive}",
+                            ));
                         }
 
-                        tokens.push(Token::NonPeriods(TokenInfo {
+                        tokens.push(Token {
                             lexeme: lexeme.clone(),
-                            literal: lexeme.clone(),
+                            literal: Literal::NonPeriods,
                             byte_idx,
-                        }));
+                        });
 
                         // read until next directive (*)
                         read_periods(scanner, &mut tokens);
                     }
                     "schedule" => {
-                        match &tokens[tokens.len() - 1] {
-                            Token::Asterisk(_) => {}
+                        match &tokens[tokens.len() - 1].literal {
+                            Literal::Asterisk => {}
                             _ => {
-                                return Err(anyhow!(CompilerError::new(
+                                return Err(CompilerError::new(
                                     scanner.get_pos() - lexeme.len() as u32 + 1,
                                     scanner.get_pos(),
                                     "schedule must be preceded by an asterisk",
-                                    "directives are of form * {directive}"
-                                )));
+                                    "directives are of form * {directive}",
+                                ));
                             }
                         }
 
-                        tokens.push(Token::Schedule(TokenInfo {
+                        tokens.push(Token {
                             lexeme: lexeme.clone(),
-                            literal: lexeme.clone(),
+                            literal: Literal::Schedule,
                             byte_idx,
-                        }));
+                        });
                     }
                     _ => {
                         let regex = Regex::new(r#"^[a-z]+([a-z0-9]+[-])*[a-z0-9]+$"#).unwrap();
                         if !regex.is_match(&lexeme) {
-                            return Err(anyhow!(CompilerError::new(
+                            return Err(CompilerError::new(
                                 byte_idx,
                                 byte_idx + lexeme.len() as u32 - 1,
                                 "invalid identifier",
                                 "expected a-z, 0-9, -, must start with a-z, and end with a-z or 0-9"
-                            )));
+                            ));
                         }
 
-                        tokens.push(Token::Identifier(TokenInfo {
+                        tokens.push(Token {
                             lexeme: lexeme.clone(),
-                            literal: lexeme.clone(),
+                            literal: Literal::Identifier(lexeme.clone()),
                             byte_idx,
-                        }));
+                        });
                     }
                 }
             }
             ' ' => {}
             _ => {
-                return Err(anyhow!(CompilerError::new(
+                return Err(CompilerError::new(
                     scanner.get_pos(),
                     scanner.get_pos(),
                     &format!("unexpected character: {} (unicode: {})", c, c as u32),
-                    "expected a-z, A-Z, 0-9, *, #, \", -, :, /, \\n, and space"
-                )));
+                    "expected a-z, A-Z, 0-9, *, #, \", -, :, /, \\n, and space",
+                ));
             }
         }
     }
@@ -423,11 +420,10 @@ pub fn make_tokens(scanner: &mut Scanner) -> Result<Vec<Token>> {
     let res = tokenizer(scanner);
 
     if let Err(e) = res {
-        let downcast: CompilerError = e.downcast()?;
         let mut err_string = String::new();
-        downcast.fmt_for_terminal(&mut err_string, scanner)?;
+        e.fmt_for_terminal(&mut err_string, scanner)?;
         return Err(anyhow!(err_string));
     }
 
-    res
+    Ok(res?)
 }

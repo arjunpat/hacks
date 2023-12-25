@@ -298,13 +298,9 @@ fn ast_gen(tokens: Vec<Token>) -> Result<Vec<Directive>, CompilerError> {
     let mut directives = Vec::new();
     let mut tokens = VecDeque::from(tokens);
 
-    loop {
-        skip_newlines(&mut tokens);
+    skip_newlines(&mut tokens);
 
-        if tokens.len() == 0 {
-            return Ok(directives);
-        }
-
+    while tokens.len() > 0 {
         let tok = tokens.pop_front().unwrap();
         if !matches!(tok.literal, Literal::Asterisk) {
             return Err(err_from_tok(
@@ -314,15 +310,7 @@ fn ast_gen(tokens: Vec<Token>) -> Result<Vec<Directive>, CompilerError> {
             ));
         }
 
-        if tokens.len() == 0 {
-            return Err(err_from_tok(
-                &tok,
-                "expected directive name after asterisk",
-                "directives are denoted by an asterisk followed by the directive name (periods, non-periods, schedule, repeat, calendar)",
-            ));
-        }
-
-        let tok = tokens.pop_front().unwrap();
+        let tok = next_tok(&mut tokens)?;
         let dir = match tok.literal {
             Literal::Repeat => parse_repeat(&mut tokens)?,
             Literal::Calendar => parse_calendar(&mut tokens)?,
@@ -332,13 +320,17 @@ fn ast_gen(tokens: Vec<Token>) -> Result<Vec<Directive>, CompilerError> {
             _ => {
                 return Err(err_from_tok(
                     &tok,
-                    "expected directive name after asterisk",
+                    "invalid directive name",
                     "directives are denoted by an asterisk followed by the directive name (periods, non-periods, schedule, repeat, calendar)",
                 ));
             }
         };
         directives.push(dir);
+
+        skip_newlines(&mut tokens);
     }
+
+    Ok(directives)
 }
 
 pub fn gen(tokens: Vec<Token>, scanner: &crate::utils::Scanner) -> Result<Vec<Directive>> {
@@ -352,8 +344,3 @@ pub fn gen(tokens: Vec<Token>, scanner: &crate::utils::Scanner) -> Result<Vec<Di
 
     Ok(ast?)
 }
-
-// pub fn validate(school_data: SchoolData) -> Result<()> {
-//     // check for overlapping overdetermined dates (calendar)
-//     Ok(())
-// }

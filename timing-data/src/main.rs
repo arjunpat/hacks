@@ -3,6 +3,7 @@ use anyhow::{anyhow, Result};
 mod parser;
 mod tokenizer;
 mod utils;
+mod validator;
 
 use utils::Scanner;
 

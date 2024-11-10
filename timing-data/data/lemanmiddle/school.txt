@@ -1,0 +1,36 @@
+* periods
+1st Hour
+2nd Hour
+3rd Hour
+4th Hour
+5th Hour
+6th Hour
+7th Hour
+8th Hour
+9th Hour
+10th Hour
+
+* schedule weekend "Weekend"
+
+
+* schedule normal "Normal Schedule"
+7:35 1st Hour
+8:17 Free
+8:20 2nd Hour
+8:59 Free
+9:02 3rd Hour
+9:41 Free
+9:44 4th Hour
+10:24 Free
+10:27 5th Hour
+11:07 Free
+11:10 6th Hour
+11:50 Free
+11:53 7th Hour
+12:33 Free
+12:36 8th Hour
+13:16 Free
+13:19 9th Hour
+13:58 Free
+14:01 10th Hour
+14:40 Free

@@ -81,7 +81,7 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError
         byte_idx,
         byte_idx + lexeme.len() as u32 - 1,
         "invalid date",
-        "expected format: MM/DD/YYYY",
+        "expected format: YYYY/MM/DD",
     );
 
     if parts.len() != 3 {
@@ -97,9 +97,9 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError
     let mut parts = parts.into_iter().map(|r| r.unwrap());
 
     let date = Date {
+        year: parts.next().unwrap(),
         month: parts.next().unwrap(),
         day: parts.next().unwrap(),
-        year: parts.next().unwrap(),
     };
 
     if date.month > 12 || date.day > 31 {

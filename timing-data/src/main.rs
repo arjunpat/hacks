@@ -57,10 +57,10 @@ fn load_school(school: &str) -> Result<()> {
 }
 
 fn main() {
-    load_school("mvhs");
-    load_school("smhs");
-    load_school("lemanmiddle");
-    load_school("paly");
+    let _ = load_school("mvhs");
+    // load_school("smhs");
+    // load_school("lemanmiddle");
+    // load_school("paly");
 
     // println!("Hello world");
 }

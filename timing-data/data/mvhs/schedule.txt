@@ -1,5 +1,4 @@
-
-* repeat 20201/8/8
+* repeat 2021/8/8
 weekend
 schedule-a
 schedule-b
@@ -8,56 +7,49 @@ schedule-b
 schedule-c
 weekend
 
-
-* calendar # this is a comment
-2023/6/8-2023/8/8 weekend "Summer Vacation"
-2023/8/9 schedule-a
-2023/8/10 schedule-a
-2023/8/11 schedule-a
-2023/9/2-2023/9/4 weekend "Labor Day Weekend"
-2023/9/26 schedule-h
-2023/9/27 schedule-i
-2023/10/2 schedule-g3
-2023/10/5 schedule-d
-2023/10/6 schedule-e
-2023/10/9 schedule-b
-2023/10/10 schedule-c
-2023/10/11 sat-oct-2023
-2023/10/12-2023/10/15 weekend "End of Quarter Break"
-2023/11/6 schedule-b
-2023/11/7 schedule-c
-2023/11/8 schedule-b
-2023/11/9 schedule-c
-2023/11/10-2023/11/12 weekend "Veteran's Day Weekend"
-2023/11/18-2023/11/26 weekend "Thanksgiving Break"
-2023/12/19 finals-day-1
-2023/12/20 finals-day-2
-2023/12/21 finals-day-3
-2023/12/22-2024/1/9 weekend "Holiday Break"
-2024/1/10 schedule-a
-2024/1/11 schedule-a
-2024/1/12 schedule-a
-2024/1/13-2024/1/15 weekend "MLK Long Weekend"
-2024/1/22 schedule-g4
-2024/2/5 schedule-g2
-2024/2/13 schedule-d
-2024/2/14 schedule-e
-2024/2/17-2024/2/25 weekend "Winter Break"
-2024/3/18 schedule-c
-2024/3/19 schedule-h
-2024/3/20 schedule-i
-2024/3/22 schedule-g3
-2024/3/23-2024/3/25 weekend "End of Quarter Break"
-2024/3/26 sbac-2024-tues
-2024/3/27 sbac-2024-wed
-2024/3/28 sbac-2024-thurs
-2024/3/29 sbac-2024-fri
-2024/4/6-2024/4/14 weekend "Spring Break"
-2024/4/30 schedule-d
-2024/5/1 schedule-e
-2024/5/20 schedule-g4
-2024/5/25-2024/5/27 weekend "Memorial Day Weekend"
-2024/6/4 finals-day-1
-2024/6/5 finals-day-2
-2024/6/6 finals-day-3
-2024/6/7-2024/8/6 weekend "Summer Vacation"
+* calendar
+2024/06/07-2024/08/12 weekend "Summer Vacation"
+2024/08/19 schedule-g
+2024/08/31-2024/09/02 weekend "Labor Day Weekend"
+2024/09/10 schedule-h
+2024/09/11 schedule-i
+2024/10/10-2024/10/13 weekend "End of Q1 Break"
+2024/10/14 schedule-g
+2024/10/17 schedule-d
+2024/10/18 schedule-e
+2024/10/21 schedule-b
+2024/10/22 schedule-c
+2024/10/23 sat-oct-2024
+2024/11/09-2024/11/11 weekend "Veteran's Day Weekend"
+2024/11/13-2024/12/01 weekend "Thanksgiving Break"
+2024/12/16 schedule-a
+2024/12/17 schedule-a
+2024/12/18 finals-day-1
+2024/12/19 finals-day-2
+2024/12/20 finals-day-3
+2024/12/21-2025/01/07 weekend "Holiday Break"
+2025/01/08 schedule-a
+2025/01/09 schedule-a
+2025/01/18-2025/01/20 weekend "MLK Long Weekend"
+2025/02/03 schedule-g
+2025/02/11 schedule-d
+2025/02/12 schedule-e
+2025/02/15-2025/02/23 weekend "Winter Break"
+2025/03/18 schedule-h
+2025/03/19 schedule-i
+2025/03/20 schedule-a
+2025/03/21-2025/03/23 weekend "End of Q3 Break"
+2025/03/25 sbac-2025-tues
+2025/03/26 sbac-2025-wed
+2025/03/27 sbac-2025-thurs
+2025/03/28 sbac-2025-fri
+2025/04/05-2025/04/13 weekend "Spring Break"
+2025/04/29 schedule-d
+2025/04/30 schedule-e
+2025/05/19 schedule-g
+2025/05/24-2025/05/26 weekend "Memorial Day Weekend"
+2025/06/03 schedule-a
+2025/06/04 finals-day-1
+2025/06/05 finals-day-2
+2025/06/06 finals-day-3
+2025/06/07-2025/08/11 weekend "Summer Vacation" # Predicted day for 2025-2026 FDoS

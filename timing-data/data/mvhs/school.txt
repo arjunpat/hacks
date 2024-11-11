@@ -1,4 +1,3 @@
-
 * periods
 Period 1
 Period 2
@@ -8,20 +7,37 @@ Period 5
 Period 6
 Period 7
 
-
+# these are periods with names that users should NOT
+# be able to customize
+# by deafult: Free, Brunch, Break, Lunch, and Passing are non-periods
 * non-periods
 Tutorial
 Period 2A
 Period 2B
-Period 3A
-Period 3B
-Period 4A
-Period 4B
 Junior ELA Testing
 Junior Math Testing
 Junior Math and Senior Science Testing
 PSAT/SAT Testing
 
+* schedule weekend "Weekend"
+
+* schedule schedule-a "Schedule A"
+8:30 Period 1
+9:20 Free
+9:27 Period 2
+10:17 Brunch # comment test
+10:25 Free
+10:32 Period 3
+11:22 Free
+11:29 Period 4
+12:19 Lunch
+12:54 Free
+13:01 Period 5
+13:51 Free
+13:58 Period 6
+14:48 Free
+14:55 Period 7
+15:45 Free
 
 * schedule schedule-b "Schedule B"
 8:30 Period 1
@@ -35,7 +51,6 @@ PSAT/SAT Testing
 14:09 Period 7
 15:39 Free
 
-
 * schedule schedule-c "Schedule C"
 8:30 Period 2
 10:00 Free
@@ -48,10 +63,29 @@ PSAT/SAT Testing
 13:32 Period 6
 15:02 Free
 
-* schedule weekend "Weekend"
+* schedule schedule-d "Schedule D (Early Release)"
+8:30 Period 1
+9:30 Free
+9:37 Period 3
+10:37 Brunch
+10:45 Free
+10:52 Period 5
+11:52 Free
+11:59 Period 7
+12:59 Free
 
+* schedule schedule-e "Schedule E (Early Release)"
+8:30 Period 2
+9:30 Free
+9:37 Tutorial
+10:20 Brunch
+10:28 Free
+10:35 Period 4
+11:35 Free
+11:42 Period 6
+12:42 Free
 
-* schedule schedule-g2 "Schedule G (Rally 2nd)"
+* schedule schedule-g "Schedule G (Rally)"
 8:30 Period 1
 9:13 Free
 9:20 Period 2A
@@ -70,3 +104,101 @@ PSAT/SAT Testing
 14:56 Free
 15:03 Period 7
 15:46 Free
+
+* schedule schedule-h "Schedule H (Late Start)"
+10:30 Period 1
+11:30 Free
+11:37 Period 3
+12:37 Lunch
+13:12 Free
+13:19 Period 5
+14:19 Free
+14:26 Period 7
+15:26 Free
+
+* schedule schedule-i "Schedule I (Late Start)"
+10:30 Period 2
+11:30 Lunch
+12:05 Free
+12:12 Period 4
+13:12 Free
+13:19 Tutorial
+14:02 Free
+14:09 Period 6
+15:09 Free
+
+* schedule finals-day-1 "Finals (Day 1)"
+8:30 Period 1
+10:30 Break
+10:43 Free
+10:50 Period 6
+12:50 Lunch
+13:30 Free
+13:37 Period 7
+15:37 Free
+
+* schedule finals-day-2 "Finals (Day 2)"
+8:30 Period 2
+10:30 Break
+10:43 Free
+10:50 Period 5
+12:50 Free
+
+* schedule finals-day-3 "Finals (Day 3)"
+8:30 Period 3
+10:30 Break
+10:43 Free
+10:50 Period 4
+12:50 Free
+
+* schedule sat-oct-2024 "PSAT/SAT Testing"
+8:30 PSAT/SAT Testing
+12:30 Free
+
+* schedule sbac-2025-tues "Tuesday SBAC Testing"
+8:40 Junior ELA Testing
+10:40 Free
+10:55 Period 1
+11:45 Lunch
+12:25 Free
+12:32 Period 3
+13:22 Free
+13:29 Period 5
+14:19 Free
+14:26 Period 7
+15:16 Free
+
+* schedule sbac-2025-wed "Wednesday SBAC Testing"
+8:40 Junior ELA Testing
+10:40 Free
+10:55 Period 2
+11:45 Lunch
+12:25 Free
+12:32 Period 4
+13:22 Free
+13:29 Period 6
+14:19 Free
+
+* schedule sbac-2025-thurs "Thursday SBAC Testing"
+8:40 Junior Math and Senior Science Testing
+10:40 Free
+10:55 Period 1
+11:45 Lunch
+12:25 Free
+12:32 Period 3
+13:22 Free
+13:29 Period 5
+14:19 Free
+14:26 Period 7
+15:16 Free
+
+* schedule sbac-2025-fri "Friday SBAC Testing"
+8:40 Junior Math Testing
+10:40 Free
+10:55 Period 2
+11:45 Lunch
+12:25 Free
+12:32 Period 4
+13:22 Free
+13:29 Period 6
+14:19 Free

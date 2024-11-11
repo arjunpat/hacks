@@ -4,26 +4,26 @@ use anyhow::{anyhow, Result};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct Token {
     pub lexeme: String,   // the actual text of the lexeme
     pub literal: Literal, // the value of the lexeme
     pub byte_idx: u32,    // the byte index of the lexeme
 }
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub struct Date {
     year: u32,
     month: u32,
     day: u32,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub struct Time {
-    hour: u32,
-    minute: u32,
+    pub hour: u32,
+    pub minute: u32,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub enum Literal {
     // Single-character tokens.
     Asterisk,
@@ -48,7 +48,7 @@ pub enum Literal {
 
 fn make_string_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError> {
     let literal = lexeme[1..lexeme.len() - 1].to_string();
-    let re: Regex = Regex::new(r#"^[a-zA-Z0-9 \-'().]+$"#).unwrap();
+    let re: Regex = Regex::new(r#"^[a-zA-Z0-9 \-'()./]+$"#).unwrap();
 
     if !re.is_match(&literal) {
         return Err(CompilerError::new(
@@ -102,7 +102,7 @@ fn make_date_token(lexeme: String, byte_idx: u32) -> Result<Token, CompilerError
         day: parts.next().unwrap(),
     };
 
-    if date.month > 12 || date.day > 31 {
+    if date.month > 12 || date.day > 31 || date.year < 2000 {
         return Err(parse_err);
     }
 
@@ -160,16 +160,27 @@ fn read_periods(scanner: &mut Scanner, tokens: &mut Vec<Token>) {
         }
 
         scanner.read_char();
-        if period_char == '\n' {
+        if period_char == '\n' || period_char == '#' {
+            let lexeme_trimmed = lexeme.trim_end();
             if lexeme.len() > 0 {
                 tokens.push(Token {
-                    lexeme: lexeme.clone(),
-                    literal: Literal::PeriodName(lexeme.clone()),
+                    lexeme: lexeme_trimmed.to_string(),
+                    literal: Literal::PeriodName(lexeme_trimmed.to_string()),
                     byte_idx: scanner.get_pos() - lexeme.len() as u32,
                 });
                 lexeme.clear();
             }
             tokens.push(make_newline_token(scanner.get_pos()));
+
+            // skip comments
+            if period_char == '#' {
+                while let Some(c) = scanner.peek_char() {
+                    if c == '\n' {
+                        break;
+                    }
+                    scanner.read_char();
+                }
+            }
         } else {
             lexeme.push(period_char);
         }
@@ -276,7 +287,7 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>, CompilerError> {
                     let byte_idx = scanner.get_pos();
                     let mut pn_lexeme = String::new();
                     while let Some(pn_char) = scanner.peek_char() {
-                        if pn_char == '\n' {
+                        if pn_char == '\n' || pn_char == '#' {
                             break;
                         } else {
                             pn_lexeme.push(pn_char);
@@ -284,9 +295,11 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>, CompilerError> {
                         }
                     }
 
+                    let pn_lexeme = pn_lexeme.trim_end();
+
                     tokens.push(Token {
-                        lexeme: pn_lexeme.clone(),
-                        literal: Literal::PeriodName(pn_lexeme.clone()),
+                        lexeme: pn_lexeme.to_string(),
+                        literal: Literal::PeriodName(pn_lexeme.to_string(),),
                         byte_idx: byte_idx + 1,
                     });
                 } else {

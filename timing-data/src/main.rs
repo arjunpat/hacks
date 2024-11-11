@@ -1,4 +1,4 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 
 mod parser;
 mod tokenizer;
@@ -6,58 +6,41 @@ mod utils;
 mod validator;
 
 use utils::Scanner;
+use validator::SchoolInfo;
 
 fn load_school(school: &str) -> Result<()> {
     let mut schedule_scanner = Scanner::new(&format!("data/{}/schedule.txt", school))?;
-    let schedule_tokens = tokenizer::make_tokens(&mut schedule_scanner);
+    let schedule_tokens = tokenizer::make_tokens(&mut schedule_scanner)?;
 
     let mut school_scanner = Scanner::new(&format!("data/{}/school.txt", school))?;
-    let school_tokens = tokenizer::make_tokens(&mut school_scanner);
+    let school_tokens = tokenizer::make_tokens(&mut school_scanner)?;
 
-    if schedule_tokens.is_err() || school_tokens.is_err() {
-        if let Err(err) = schedule_tokens {
-            println!("{}", err);
-        }
+    let schedule_ast = parser::gen(schedule_tokens, &schedule_scanner)?;
+    let school_ast = parser::gen(school_tokens, &school_scanner)?;
 
-        if let Err(err) = school_tokens {
-            println!("{}", err);
-        }
-        return Err(anyhow!("Tokenizer failed"));
-    }
+    // make school info
+    let (periods, non_periods, presets) =
+        validator::school_to_school_info(school_ast, &school_scanner)?;
 
-    // let mut tokens = schedule_tokens.unwrap();
-    // tokens.append(&mut school_tokens.unwrap());
-    // println!("Finished lexing");
+    let (repeat, calendar) = validator::schedule_to_school_info(schedule_ast, &schedule_scanner)?;
 
-    let schedule_ast = parser::gen(schedule_tokens.unwrap(), &schedule_scanner);
-    let school_ast = parser::gen(school_tokens.unwrap(), &school_scanner);
+    let school_info = SchoolInfo {
+        repeat,
+        periods,
+        non_periods,
+        presets,
+        calendar,
+    };
 
-    if schedule_ast.is_err() || school_ast.is_err() {
-        if let Err(err) = schedule_ast {
-            println!("{}", err);
-        }
-
-        if let Err(err) = school_ast {
-            println!("{}", err);
-        }
-
-        return Err(anyhow!("Parser failed"));
-    }
-
-    // if let Err(e) = school_data {
-    //     println!("{}", e);
-    //     return Err(anyhow!("Failed to parse"));
-    // }
-
-    // if let Err(e) = parser::validate(school_data.unwrap()) {
-    //     println!("{}", e);
-    // }
+    validator::high_level_verifier(school_info, &school_scanner, &schedule_scanner)?;
 
     Ok(())
 }
 
 fn main() {
-    let _ = load_school("mvhs");
+    if let Err(err) = load_school("mvhs") {
+        println!("{}", err);
+    }
     // load_school("smhs");
     // load_school("lemanmiddle");
     // load_school("paly");

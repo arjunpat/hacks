@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{anyhow, Result};
 use core::{fmt, panic};
 use std::{fs::File, io::Read};
 
@@ -125,6 +125,12 @@ impl CompilerError {
             msg: msg.to_owned(),
             hint,
         }
+    }
+
+    pub fn get_err_str(&self, scanner: &Scanner) -> anyhow::Error {
+        let mut err_str = String::new();
+        self.fmt_for_terminal(&mut err_str, scanner).unwrap();
+        anyhow!(err_str)
     }
 
     pub fn fmt_for_terminal(&self, f: &mut dyn fmt::Write, scanner: &Scanner) -> Result<()> {

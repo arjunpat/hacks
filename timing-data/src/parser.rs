@@ -1,21 +1,21 @@
 use std::collections::VecDeque;
 
 use crate::utils::CompilerError;
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 
 use crate::tokenizer::{Literal, Token};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Event {
-    from: Token,
-    name: Token,
+    pub from: Token,
+    pub name: Token,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Preset {
-    ident: Token,
-    name: Token,
-    event_list: Vec<Event>,
+    pub ident: Token,
+    pub name: Token,
+    pub event_list: Vec<Event>,
 }
 
 #[derive(Debug)]
@@ -26,24 +26,31 @@ pub enum Date {
 
 #[derive(Debug)]
 pub struct CalendarItem {
-    dates: Date,
-    name_override: Option<Token>,
-    preset: Token,
+    pub dates: Date,
+    pub name_override: Option<Token>,
+    pub preset: Token,
 }
 
 #[derive(Debug)]
 pub struct Repeat {
-    date: Token,
-    pattern: Vec<Token>,
+    pub date: Token,
+    pub pattern: Vec<Token>,
 }
 
 #[derive(Debug)]
-pub enum Directive {
+pub enum DirectiveItem {
     Periods(Vec<Token>),
     NonPeriods(Vec<Token>),
     Preset(Preset),
     Calendar(Vec<CalendarItem>),
     Repeat(Repeat),
+}
+
+#[derive(Debug)]
+pub struct Directive {
+    pub content: DirectiveItem,
+    // pub scanner: &'a crate::utils::Scanner,
+    pub begin_tok: Token,
 }
 
 fn skip_newlines(tokens: &mut VecDeque<Token>) {
@@ -91,7 +98,7 @@ fn expect_newline_after_directive_header(
     Ok(())
 }
 
-fn parse_repeat(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerError> {
+fn parse_repeat(tokens: &mut VecDeque<Token>) -> Result<DirectiveItem, CompilerError> {
     // expect date
     let date = next_tok(tokens)?;
 
@@ -119,10 +126,10 @@ fn parse_repeat(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerError
         }
     }
 
-    Ok(Directive::Repeat(Repeat { date, pattern }))
+    Ok(DirectiveItem::Repeat(Repeat { date, pattern }))
 }
 
-fn parse_periods(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerError> {
+fn parse_periods(tokens: &mut VecDeque<Token>) -> Result<DirectiveItem, CompilerError> {
     expect_newline_after_directive_header(tokens)?;
 
     let mut periods = Vec::new();
@@ -139,10 +146,10 @@ fn parse_periods(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerErro
         }
     }
 
-    Ok(Directive::Periods(periods))
+    Ok(DirectiveItem::Periods(periods))
 }
 
-fn parse_nonperiods(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerError> {
+fn parse_nonperiods(tokens: &mut VecDeque<Token>) -> Result<DirectiveItem, CompilerError> {
     expect_newline_after_directive_header(tokens)?;
 
     let mut periods = Vec::new();
@@ -159,10 +166,10 @@ fn parse_nonperiods(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerE
         }
     }
 
-    Ok(Directive::NonPeriods(periods))
+    Ok(DirectiveItem::NonPeriods(periods))
 }
 
-fn parse_schedule(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerError> {
+fn parse_schedule(tokens: &mut VecDeque<Token>) -> Result<DirectiveItem, CompilerError> {
     // expect identifier
     let ident = next_tok(tokens)?;
 
@@ -217,14 +224,14 @@ fn parse_schedule(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerErr
         }
     }
 
-    Ok(Directive::Preset(Preset {
+    Ok(DirectiveItem::Preset(Preset {
         name,
         ident,
         event_list,
     }))
 }
 
-fn parse_calendar(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerError> {
+fn parse_calendar(tokens: &mut VecDeque<Token>) -> Result<DirectiveItem, CompilerError> {
     expect_newline_after_directive_header(tokens)?;
 
     let mut calendar_items = Vec::new();
@@ -291,7 +298,7 @@ fn parse_calendar(tokens: &mut VecDeque<Token>) -> Result<Directive, CompilerErr
         }
     }
 
-    Ok(Directive::Calendar(calendar_items))
+    Ok(DirectiveItem::Calendar(calendar_items))
 }
 
 fn ast_gen(tokens: Vec<Token>) -> Result<Vec<Directive>, CompilerError> {
@@ -301,17 +308,17 @@ fn ast_gen(tokens: Vec<Token>) -> Result<Vec<Directive>, CompilerError> {
     skip_newlines(&mut tokens);
 
     while tokens.len() > 0 {
-        let tok = tokens.pop_front().unwrap();
-        if !matches!(tok.literal, Literal::Asterisk) {
+        let asterisk = tokens.pop_front().unwrap();
+        if !matches!(asterisk.literal, Literal::Asterisk) {
             return Err(err_from_tok(
-                &tok,
+                &asterisk,
                 "unexpected token",
                 "ensure this token is part of some directive, which start with \"*\"",
             ));
         }
 
         let tok = next_tok(&mut tokens)?;
-        let dir = match tok.literal {
+        let content = match tok.literal {
             Literal::Repeat => parse_repeat(&mut tokens)?,
             Literal::Calendar => parse_calendar(&mut tokens)?,
             Literal::Periods => parse_periods(&mut tokens)?,
@@ -325,7 +332,11 @@ fn ast_gen(tokens: Vec<Token>) -> Result<Vec<Directive>, CompilerError> {
                 ));
             }
         };
-        directives.push(dir);
+
+        directives.push(Directive {
+            content,
+            begin_tok: asterisk,
+        });
 
         skip_newlines(&mut tokens);
     }
@@ -337,9 +348,7 @@ pub fn gen(tokens: Vec<Token>, scanner: &crate::utils::Scanner) -> Result<Vec<Di
     let ast = ast_gen(tokens);
 
     if let Err(e) = ast {
-        let mut err_string = String::new();
-        e.fmt_for_terminal(&mut err_string, scanner)?;
-        return Err(anyhow!(err_string));
+        return Err(e.get_err_str(scanner));
     }
 
     Ok(ast?)

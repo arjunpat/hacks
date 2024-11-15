@@ -17,6 +17,13 @@ pub struct Date {
     day: u32,
 }
 
+impl Date {
+    pub fn to_american(&self) -> String {
+        // format in m/d/y
+        format!("{}/{}/{}", self.month, self.day, self.year)
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize, PartialEq, Copy, Clone)]
 pub struct Time {
     pub hour: u32,
@@ -299,7 +306,7 @@ fn tokenizer(scanner: &mut Scanner) -> Result<Vec<Token>, CompilerError> {
 
                     tokens.push(Token {
                         lexeme: pn_lexeme.to_string(),
-                        literal: Literal::PeriodName(pn_lexeme.to_string(),),
+                        literal: Literal::PeriodName(pn_lexeme.to_string()),
                         byte_idx: byte_idx + 1,
                     });
                 } else {

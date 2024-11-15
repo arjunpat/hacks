@@ -14,7 +14,7 @@ pub struct SchoolInfo {
     pub repeat: (Token, Repeat),
     pub periods: (Token, Vec<Token>),
     pub non_periods: (Token, Vec<Token>),
-    pub presets: HashMap<String, (Token, Preset)>,
+    pub presets: HashMap<String, Preset>,
     pub calendar: Vec<CalendarItem>,
 }
 
@@ -101,7 +101,7 @@ pub fn school_to_school_info(
 ) -> Result<(
     (Token, Vec<Token>),
     (Token, Vec<Token>),
-    HashMap<String, (Token, Preset)>,
+    HashMap<String, Preset>,
 )> {
     let mut periods = None;
     let mut non_periods = None;
@@ -134,7 +134,7 @@ pub fn school_to_school_info(
                 non_periods = Some((directive.begin_tok, nonperiods_vec));
             }
             DirectiveItem::Preset(preset) => {
-                presets.insert(preset.ident.lexeme.clone(), (preset.ident.clone(), preset));
+                presets.insert(preset.ident.lexeme.clone(), preset);
             }
             _ => {
                 return Err(err_from_tok(
@@ -183,7 +183,7 @@ pub fn school_to_school_info(
 const DEFAULT_NON_PERIODS: [&str; 5] = ["Free", "Brunch", "Break", "Lunch", "Passing"];
 
 pub fn high_level_verifier(
-    school_info: SchoolInfo,
+    school_info: &SchoolInfo,
     school_scanner: &Scanner,
     schedule_scanner: &Scanner,
 ) -> Result<()> {
@@ -269,7 +269,7 @@ pub fn high_level_verifier(
     all_events.extend(DEFAULT_NON_PERIODS.iter().map(|s| s.to_string()));
 
     // ensure valid presets
-    for (ident, (tok, preset)) in school_info.presets.iter() {
+    for (ident, preset) in school_info.presets.iter() {
         let mut last_time: Option<Time> = None;
         // verify high-level schedule
         for i in 0..preset.event_list.len() {
@@ -359,4 +359,29 @@ pub fn high_level_verifier(
     }
 
     return Ok(());
+}
+
+pub fn prune(school_info: &mut SchoolInfo) {
+    // TODO(arjun): prune old calendar items
+
+    // want to remove presets that aren't used
+    let mentioned_presets: Vec<String> = school_info
+        .repeat
+        .1
+        .pattern
+        .iter()
+        .map(|s| s.lexeme.clone())
+        .chain(school_info.calendar.iter().map(|e| e.preset.lexeme.clone()))
+        .collect();
+
+    let presets_to_delete: Vec<String> = school_info
+        .presets
+        .keys()
+        .filter(|s| !mentioned_presets.contains(s))
+        .cloned()
+        .collect();
+
+    for preset in presets_to_delete {
+        school_info.presets.remove(&preset);
+    }
 }

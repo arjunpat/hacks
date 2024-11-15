@@ -1,6 +1,7 @@
 use anyhow::Result;
 
 mod parser;
+mod serialize;
 mod tokenizer;
 mod utils;
 mod validator;
@@ -8,7 +9,12 @@ mod validator;
 use utils::Scanner;
 use validator::SchoolInfo;
 
-fn load_school(school: &str) -> Result<()> {
+struct SchoolJsonFiles {
+    schedule: String,
+    school: String,
+}
+
+fn load_school(school: &str) -> Result<SchoolJsonFiles> {
     let mut schedule_scanner = Scanner::new(&format!("data/{}/schedule.txt", school))?;
     let schedule_tokens = tokenizer::make_tokens(&mut schedule_scanner)?;
 
@@ -24,7 +30,7 @@ fn load_school(school: &str) -> Result<()> {
 
     let (repeat, calendar) = validator::schedule_to_school_info(schedule_ast, &schedule_scanner)?;
 
-    let school_info = SchoolInfo {
+    let mut school_info = SchoolInfo {
         repeat,
         periods,
         non_periods,
@@ -32,15 +38,32 @@ fn load_school(school: &str) -> Result<()> {
         calendar,
     };
 
-    validator::high_level_verifier(school_info, &school_scanner, &schedule_scanner)?;
+    validator::high_level_verifier(&school_info, &school_scanner, &schedule_scanner)?;
 
-    Ok(())
+    validator::prune(&mut school_info);
+
+    let schedule_json = serialize::serialize_to_schedule(&school_info)?;
+    let school_json = serialize::serialize_to_school(&school_info)?;
+
+    Ok(SchoolJsonFiles {
+        schedule: schedule_json,
+        school: school_json,
+    })
 }
 
 fn main() {
-    if let Err(err) = load_school("mvhs") {
-        println!("{}", err);
+    let result = load_school("mvhs");
+
+    match result {
+        Ok(files) => {
+            println!("{}", files.schedule);
+            println!("{}", files.school);
+        }
+        Err(e) => {
+            println!("{}", e);
+        }
     }
+
     // load_school("smhs");
     // load_school("lemanmiddle");
     // load_school("paly");

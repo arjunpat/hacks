@@ -6,6 +6,7 @@ mod tokenizer;
 mod utils;
 mod validator;
 
+use std::{fs, path::Path};
 use utils::Scanner;
 use validator::SchoolInfo;
 
@@ -52,21 +53,29 @@ fn load_school(school: &str) -> Result<SchoolJsonFiles> {
 }
 
 fn main() {
-    let result = load_school("mvhs");
+    let out_path = Path::new("json_output");
+    if out_path.exists() {
+        fs::remove_dir_all(out_path).unwrap();
+    }
+    fs::create_dir(out_path).unwrap();
 
-    match result {
-        Ok(files) => {
-            println!("{}", files.schedule);
-            println!("{}", files.school);
-        }
-        Err(e) => {
-            println!("{}", e);
+    for entry in fs::read_dir(Path::new("data")).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if path.is_dir() {
+            let school = path.file_name().unwrap().to_str().unwrap();
+            let result = load_school(school);
+
+            match result {
+                Ok(files) => {
+                    fs::create_dir(out_path.join(school)).unwrap();
+                    fs::write(out_path.join(school).join("schedule.json"), files.schedule).unwrap();
+                    fs::write(out_path.join(school).join("school.json"), files.school).unwrap();
+                }
+                Err(e) => {
+                    println!("{}", e);
+                }
+            }
         }
     }
-
-    // load_school("smhs");
-    // load_school("lemanmiddle");
-    // load_school("paly");
-
-    // println!("Hello world");
 }

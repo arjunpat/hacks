@@ -1,4 +1,5 @@
 use anyhow::Result;
+use serde::{Deserialize, Serialize};
 
 mod parser;
 mod serialize;
@@ -6,7 +7,7 @@ mod tokenizer;
 mod utils;
 mod validator;
 
-use std::{fs, path::Path};
+use std::{collections::HashMap, fs, path::Path};
 use utils::Scanner;
 use validator::SchoolInfo;
 
@@ -15,11 +16,11 @@ struct SchoolJsonFiles {
     school: String,
 }
 
-fn load_school(school: &str) -> Result<SchoolJsonFiles> {
-    let mut schedule_scanner = Scanner::new(&format!("data/{}/schedule.txt", school))?;
+fn process_school(
+    mut schedule_scanner: Scanner,
+    mut school_scanner: Scanner,
+) -> Result<SchoolJsonFiles> {
     let schedule_tokens = tokenizer::make_tokens(&mut schedule_scanner)?;
-
-    let mut school_scanner = Scanner::new(&format!("data/{}/school.txt", school))?;
     let school_tokens = tokenizer::make_tokens(&mut school_scanner)?;
 
     let schedule_ast = parser::gen(schedule_tokens, &schedule_scanner)?;
@@ -40,7 +41,6 @@ fn load_school(school: &str) -> Result<SchoolJsonFiles> {
     };
 
     validator::high_level_verifier(&school_info, &school_scanner, &schedule_scanner)?;
-
     validator::prune(&mut school_info);
 
     let schedule_json = serialize::serialize_to_schedule(&school_info)?;
@@ -52,30 +52,71 @@ fn load_school(school: &str) -> Result<SchoolJsonFiles> {
     })
 }
 
-fn main() {
+fn load_schools_from_directory() -> Result<()> {
     let out_path = Path::new("json_output");
     if out_path.exists() {
-        fs::remove_dir_all(out_path).unwrap();
+        fs::remove_dir_all(out_path)?;
     }
-    fs::create_dir(out_path).unwrap();
+    fs::create_dir(out_path)?;
 
-    for entry in fs::read_dir(Path::new("data")).unwrap() {
-        let entry = entry.unwrap();
-        let path = entry.path();
-        if path.is_dir() {
-            let school = path.file_name().unwrap().to_str().unwrap();
-            let result = load_school(school);
+    #[derive(Deserialize, Debug)]
+    struct DirItem {
+        name: String,
+        folder: Option<String>,
+    }
 
-            match result {
-                Ok(files) => {
-                    fs::create_dir(out_path.join(school)).unwrap();
-                    fs::write(out_path.join(school).join("schedule.json"), files.schedule).unwrap();
-                    fs::write(out_path.join(school).join("school.json"), files.school).unwrap();
-                }
-                Err(e) => {
-                    println!("{}", e);
-                }
+    let dir: HashMap<String, DirItem> =
+        serde_json::from_reader(fs::File::open("data/directory.json")?)?;
+
+    for entry in dir.keys() {
+        let folder = match &dir[entry].folder {
+            Some(folder) => folder,
+            None => entry,
+        };
+
+        let schedule_scanner = Scanner::new(&format!("data/{}/schedule.txt", folder))?;
+        let school_scanner = Scanner::new(&format!("data/{}/school.txt", folder))?;
+
+        let result = process_school(schedule_scanner, school_scanner);
+
+        match result {
+            Ok(files) => {
+                fs::create_dir(out_path.join(entry))?;
+                fs::write(out_path.join(entry).join("schedule.json"), files.schedule)?;
+                fs::write(out_path.join(entry).join("school.json"), files.school)?;
+            }
+            Err(e) => {
+                println!("{}", e);
             }
         }
+    }
+
+    // write school_directory.json
+    #[derive(Serialize)]
+    struct SchoolDirectory {
+        n: String,
+        id: String,
+    }
+
+    let school_directory: Vec<SchoolDirectory> = dir
+        .keys()
+        .map(|entry| SchoolDirectory {
+            n: dir[entry].name.clone(),
+            id: entry.clone(),
+        })
+        .collect();
+
+    fs::write(
+        out_path.join("school_directory.json"),
+        serde_json::to_string(&school_directory)?,
+    )?;
+
+    Ok(())
+}
+
+fn main() {
+    std::env::set_var("RUST_BACKTRACE", "1");
+    if let Err(e) = load_schools_from_directory() {
+        println!("{:?}", e);
     }
 }

@@ -11,7 +11,8 @@ pub struct Scanner {
 
 impl Scanner {
     pub fn new(filename: &str) -> Result<Self> {
-        let mut file = File::open(filename)?;
+        let mut file = File::open(filename)
+            .map_err(|_| anyhow!(format!("Could not open file {}", filename)))?;
         let mut buffer = String::new();
         file.read_to_string(&mut buffer)?;
 

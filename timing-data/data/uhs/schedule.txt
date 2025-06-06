@@ -1,0 +1,23 @@
+* repeat 2020/11/15
+weekend
+dl-mon
+dl-odd-block
+dl-odd-block
+dl-even-block
+dl-even-block
+weekend
+
+* calendar
+2020/11/23 dl-even-block
+2020/11/24 dl-mon
+2020/11/25-2020/11/29 weekend "Thanksgiving Break"
+2020/12/22 dl-mon
+2020/12/23-2021/1/3 weekend "Winter Break"
+2021/1/18 weekend "MLK Day"
+2021/2/15 weekend "President's Day"
+2021/3/8 dl-even-block
+2021/3/12-2021/3/21 weekend "Spring Break"
+2021/4/19 dl-even-block
+2021/4/23 weekend "Spring Recess"
+2021/5/31 weekend "Memorial Day"
+2021/6/3-2021/8/22 weekend "School's Out"

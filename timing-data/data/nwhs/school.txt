@@ -1,0 +1,52 @@
+* periods
+Period 1
+Period 2
+Period 3
+Period 4
+Period 5
+Period 6
+Period 7
+
+* non-periods
+JagPaws
+Transition
+
+
+* schedule weekend "Weekend"
+
+
+* schedule schedule-a "Regular Bell Schedule"
+7:45 Period 1
+8:31 Transition
+8:36 Period 2
+9:22 Transition
+9:27 Period 3
+10:20 Transition
+10:25 Period 4
+11:11 Lunch
+11:56 Transition
+12:01 Period 5
+12:47 Transition
+12:52 Period 6
+13:38 Transition
+13:43 Period 7
+14:30 Free
+
+
+* schedule schedule-b "Jag Paws Schedule"
+7:45 Period 1
+8:27 Transition
+8:32 Period 2
+9:14 JagPaws
+9:51 Transition
+9:56 Period 3
+10:38 Transition
+10:43 Period 4
+11:25 Lunch
+12:09 Transition
+12:14 Period 5
+12:56 Transition
+13:01 Period 6
+13:43 Transition
+13:48 Period 7
+14:30 Free

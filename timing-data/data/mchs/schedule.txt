@@ -1,0 +1,50 @@
+* repeat 2021/8/29
+weekend
+black
+gold
+black
+black
+gold
+weekend
+
+* calendar
+2021/8/30 weekend
+2021/8/31 weekend
+2021/9/1 other "Freshmen First Day"
+2021/9/6 weekend
+2021/9/8 gold
+2021/9/15 early-black
+2021/9/29 late-gold
+2021/10/7 other "Advisee Day Out"
+2021/10/8 weekend
+2021/10/11 weekend
+2021/10/27 late-gold
+2021/11/3 gold
+2021/11/10 early-black
+2021/11/11 weekend
+2021/11/24-2021/11/26 weekend
+2021/12/8 early-other "Kids Who Care Day"
+2021/12/15 gold
+2021/12/21 other "Teen Issues Day"
+2021/12/22 early-gold
+2021/12/23-2022/1/2 weekend "Holiday Break"
+2022/1/12 gold
+2022/1/26 late-gold
+2022/2/9 early-gold
+2022/2/16 gold
+2022/2/18 other "Winter Carnival"
+2022/2/21-2022/2/25 weekend
+2022/3/2 gold
+2022/3/16 gold
+2022/3/17 early-black
+2022/3/18 weekend
+2022/3/23 other "Teen Issues Day"
+2022/3/30 late-black
+2022/4/15-2022/4/23 weekend
+2022/4/27 late-gold
+2022/5/11 early-gold
+2022/5/18 gold
+2022/5/25 late-black
+2022/5/30 weekend
+2022/6/8 other "Advisee Day Out"
+2022/6/17 gold "Last Day if normal"

@@ -1,4 +1,4 @@
-* repeat 8/23/2020
+* repeat 2020/8/23
 weekend
 monday
 tuesday-friday
@@ -8,14 +8,14 @@ tuesday-friday
 weekend
 
 * calendar
-8/18/2020-8/28/2020 monday "Minimum Day"
-9/7/2020 weekend "Labor Day"
-11/11/2020 weekend "Veteran's Day"
-11/23/2020-11/27/2020 weekend "Thanksgiving Break"
-12/18/2020 weekend "Non-Student Day"
-12/21/2020-1/8/2021 weekend "Winter Break"
-1/18/2021 weekend "Martin Luther King Jr. Day"
-2/12/2021-2/15/2021 weekend "President Weekend"
-3/29/2021-4/2/2021 weekend "Spring Break"
-5/31/2021 weekend "Memorial Day"
-6/9/2021 monday "Last Day Of School"
+2020/8/18-2020/8/28 monday "Minimum Day"
+2020/9/7 weekend "Labor Day"
+2020/11/11 weekend "Veteran's Day"
+2020/11/23-2020/11/27 weekend "Thanksgiving Break"
+2020/12/18 weekend "Non-Student Day"
+2020/12/21-2021/1/8 weekend "Winter Break"
+2021/1/18 weekend "Martin Luther King Jr. Day"
+2021/2/12-2021/2/15 weekend "President Weekend"
+2021/3/29-2021/4/2 weekend "Spring Break"
+2021/5/31 weekend "Memorial Day"
+2021/6/9 monday "Last Day Of School"

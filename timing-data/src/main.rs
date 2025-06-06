@@ -7,9 +7,19 @@ mod tokenizer;
 mod utils;
 mod validator;
 
+use clap::Parser;
 use std::{collections::HashMap, fs, path::Path};
 use utils::Scanner;
 use validator::SchoolInfo;
+
+#[derive(Parser)]
+struct Args {
+    #[clap(short, long, default_value_t = String::from("out"))]
+    out_dir: String,
+
+    #[clap(short, long, default_value_t = false)]
+    dry_run: bool,
+}
 
 struct SchoolJsonFiles {
     schedule: String,
@@ -52,12 +62,14 @@ fn process_school(
     })
 }
 
-fn load_schools_from_directory() -> Result<()> {
-    let out_path = Path::new("json_output");
-    if out_path.exists() {
-        fs::remove_dir_all(out_path)?;
+fn load_schools_from_directory(args: Args) -> Result<()> {
+    let out_path = Path::new(&args.out_dir);
+    if !args.dry_run {
+        if out_path.exists() {
+            fs::remove_dir_all(out_path)?;
+        }
+        fs::create_dir(out_path)?;
     }
-    fs::create_dir(out_path)?;
 
     #[derive(Deserialize, Debug)]
     struct DirItem {
@@ -81,9 +93,11 @@ fn load_schools_from_directory() -> Result<()> {
 
         match result {
             Ok(files) => {
-                fs::create_dir(out_path.join(entry))?;
-                fs::write(out_path.join(entry).join("schedule.json"), files.schedule)?;
-                fs::write(out_path.join(entry).join("school.json"), files.school)?;
+                if !args.dry_run {
+                    fs::create_dir(out_path.join(entry))?;
+                    fs::write(out_path.join(entry).join("schedule.json"), files.schedule)?;
+                    fs::write(out_path.join(entry).join("school.json"), files.school)?;
+                }
             }
             Err(e) => {
                 println!("{}", e);
@@ -106,17 +120,21 @@ fn load_schools_from_directory() -> Result<()> {
         })
         .collect();
 
-    fs::write(
-        out_path.join("school_directory.json"),
-        serde_json::to_string(&school_directory)?,
-    )?;
+    if !args.dry_run {
+        fs::write(
+            out_path.join("school_directory.json"),
+            serde_json::to_string(&school_directory)?,
+        )?;
+    }
 
     Ok(())
 }
 
 fn main() {
+    let args = Args::parse();
+
     std::env::set_var("RUST_BACKTRACE", "1");
-    if let Err(e) = load_schools_from_directory() {
+    if let Err(e) = load_schools_from_directory(args) {
         println!("{:?}", e);
     }
 }

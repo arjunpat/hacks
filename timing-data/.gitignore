@@ -19,4 +19,4 @@ Cargo.lock
 
 .idea
 
-json_output/
+out/

@@ -1,0 +1,11 @@
+* repeat 2020/1/26
+weekend
+monday
+tuesday-friday
+wednesday
+thursday
+tuesday-friday
+weekend
+
+* calendar
+2018/6/8 weekend "MLK Day"

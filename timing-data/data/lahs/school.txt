@@ -7,10 +7,6 @@ Period 5
 Period 6
 Period 7
 
-# these are periods with names that users should NOT
-# be able to customize
-# by deafult: Free, Brunch, Break, Lunch, and Passing are non-periods
-
 * non-periods
 Tutorial
 Period 2A
@@ -169,9 +165,6 @@ PSAT/SAT Testing
 8:30 PSAT/SAT Testing
 12:30 Free
 
-
-
-#Unsure about SBAC and SAT Schedule Yet, Not Updated
 
 * schedule sbac-2025-tues "Tuesday SBAC Testing"
 8:40 Junior ELA Testing

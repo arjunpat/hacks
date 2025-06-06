@@ -1,0 +1,21 @@
+* repeat 2023/6/5
+monday
+normal
+normal
+normal
+normal
+weekend
+weekend
+
+* calendar
+2023/11/22-2023/11/24 weekend "Fall Break"
+2023/12/18-2024/1/2 weekend "Winter Break"
+2024/1/15 weekend "MLK Day"
+2024/2/15 weekend "Conferences"
+2024/2/16 weekend "No School"
+2024/2/19 weekend "President's day"
+2024/3/11-2024/3/15 weekend "Spring Break"
+2024/4/19 weekend "No School"
+2024/5/19 weekend "Graduating Day"
+2024/5/20-2024/8/14 weekend "Summer/No School"
+2024/8/15 weekend "Day Before Start"

@@ -1,0 +1,32 @@
+* periods
+1st Hour
+2nd Hour
+3rd Hour
+4th Hour
+5th Hour
+6th Hour
+7th Hour
+
+* non-periods
+# empty
+
+
+* schedule normal "Normal Schedule"
+8:30 1st Hour
+9:22 Passing
+9:25 2nd Hour
+10:17 Passing
+10:20 3rd Hour
+11:12 Passing
+11:15 Lunch
+11:50 4th Hour
+12:42 Passing
+12:45 5th Hour
+13:37 Passing
+13:40 6th Hour
+14:32 Passing
+14:35 7th Hour
+15:30 Free
+
+
+* schedule weekend "Weekend"

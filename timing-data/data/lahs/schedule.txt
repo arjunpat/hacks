@@ -52,5 +52,4 @@ weekend
 2025/6/4 finals-day-1
 2025/6/5 finals-day-2
 2025/6/6 finals-day-3
-2025/6/7-2025/8/11 weekend "Summer Vacation"  # Predicted day for 2025-2026 FDoS
-
+2025/6/7-2025/8/11 weekend "Summer Vacation"

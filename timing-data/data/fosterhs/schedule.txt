@@ -1,0 +1,10 @@
+* repeat 2020/8/9
+weekend
+mon-tues
+mon-tues
+wed
+thurs-fri
+thurs-fri
+weekend
+
+* calendar

@@ -10,6 +10,9 @@
 9th Hour
 10th Hour
 
+* non-periods
+# empty
+
 * schedule weekend "Weekend"
 
 

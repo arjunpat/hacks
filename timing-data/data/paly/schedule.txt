@@ -1,4 +1,4 @@
-* repeat 5/19/2019
+* repeat 2019/5/19
 weekend
 odd
 even
@@ -15,4 +15,4 @@ odd
 weekend
 
 * calendar
-6/1/2019-8/11/2019 weekend "Summer Break"
+2019/6/1-2019/8/11 weekend "Summer Break"
